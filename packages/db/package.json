@@ -28,6 +28,8 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "push": "pnpm with-env prisma db push",
+    "generate": "pnpm with-env prisma generate",
+    "migrate": "pnpm with-env prisma migrate dev",
     "pull": "pnpm with-env prisma db pull",
     "studio": "pnpm with-env prisma studio --port 5556",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
