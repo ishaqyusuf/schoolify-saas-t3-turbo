@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "pnpm with-env prisma push && pnpm with-env prisma db generate && tsc",
+    "build": "pnpm with-env prisma db push && pnpm with-env prisma db generate && tsc",
     "dev": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
