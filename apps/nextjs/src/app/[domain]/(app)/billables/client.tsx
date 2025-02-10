@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Button } from "@acme/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@acme/ui/card";
 
-import { BillableList } from "~/data-access/billables.dta";
-import Title from "../(app)/_components/header/title";
+import type { BillableList } from "~/data-access/billables.dta";
+import Title from "../_components/header/title";
 
 export default function PageClient({ loader }) {
   const services: BillableList = use(loader);
