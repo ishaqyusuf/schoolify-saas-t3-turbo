@@ -22,6 +22,7 @@ export const restrictEnvAccess = tseslint.config({
           "Use `import { env } from '~/env'` instead to ensure validated types.",
       },
     ],
+
     "no-restricted-imports": [
       "error",
       {
@@ -62,6 +63,7 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-unsafe-argument": "warn",
+      "@typescript-eslint/no-unsafe-return": "off",
       "no-case-declarations": "off",
       "@typescript-eslint/consistent-type-imports": [
         "warn",
