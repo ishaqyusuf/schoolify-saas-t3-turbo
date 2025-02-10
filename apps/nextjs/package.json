@@ -12,7 +12,7 @@
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "vercel-build": "pnpm with-env prisma push && pnpm with-env prisma db generate && pnpm with-env next build"
+    "vercel-build": "pnpm with-env prisma db push && pnpm with-env prisma db generate && pnpm with-env next build"
   },
   "dependencies": {
     "@acme/api": "workspace:*",
