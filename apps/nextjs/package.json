@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env next build",
+    "build": "pnpm with-env prisma generate && pnpm with-env prisma db push & pnpm with-env next build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm with-env next dev --port 4011",
     "format": "prettier --check . --ignore-path ../../.gitignore",
