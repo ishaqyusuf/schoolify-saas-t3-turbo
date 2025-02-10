@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env prisma generate && pnpm with-env prisma db push & pnpm with-env next build",
+    "build": "pnpm with-env next build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm with-env next dev --port 4011",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "vercel-build": "pnpm with-env prisma push && pnpm with-env prisma db generate & pnpm with-env next build"
   },
   "dependencies": {
     "@acme/api": "workspace:*",
