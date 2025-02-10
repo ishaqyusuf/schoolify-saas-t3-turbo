@@ -3,12 +3,14 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@acme/ui";
-import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
+import { ThemeProvider } from "@acme/ui/theme";
 import { Toaster } from "@acme/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
+
+import { NuqsAdapter } from "nuqs/adapters/next/pages";
 
 import { env } from "~/env";
 
@@ -50,11 +52,13 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
-          <div className="absolute bottom-4 right-4">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <TRPCReactProvider>
+            <NuqsAdapter>{props.children}</NuqsAdapter>
+          </TRPCReactProvider>
+          {/* <div className="absolute bottom-4 right-4">
             <ThemeToggle />
-          </div>
+          </div> */}
           <Toaster />
         </ThemeProvider>
       </body>

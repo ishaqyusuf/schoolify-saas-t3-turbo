@@ -48,3 +48,52 @@
     --ring: 240 4.9% 83.9%;
   }
 }
+#resultTable th,
+#resultTable td {
+  @apply border border-black/50;
+}
+#resultTable th,
+#resultTable td {
+  @apply p-0.5 px-4;
+}
+.under-line {
+  @apply border-b border-black/50;
+}
+#resultTable.full th,
+#resultTable.full td {
+  @apply p-2 px-4;
+}
+#resultTable.full td {
+  @apply text-lg;
+}
+#resultTable.half td {
+  @apply text-lg;
+}
+#resultTable.half2 td {
+  @apply py-0 text-lg leading-tight;
+}
+#resultTable.half3 td {
+  @apply py-0 text-lg leading-tight;
+}
+.print-px {
+  @apply px-16;
+}
+th {
+  @apply text-black/70;
+}
+table.student-table th {
+  @apply text-sm font-bold;
+}
+table.student-table {
+  @apply border border-muted-foreground/80;
+}
+table.student-table th,
+table.student-table td {
+  @apply border-l border-muted-foreground/80;
+}
+table.student-table tr {
+  @apply border-muted-foreground/80;
+}
+table.student-table td {
+  @apply h-[35px] p-2 py-1;
+}

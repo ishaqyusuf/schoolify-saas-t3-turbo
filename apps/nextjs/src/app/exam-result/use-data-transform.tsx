@@ -34,7 +34,7 @@ export default function useDataTransform() {
         const _resp: Partial<IClassResult> = {
           results: [],
           totalstudents: 0,
-          pageSize: d.pageSize,
+          pageSize: d.pageSize as any,
         };
         _resp.className = d.class;
         let Subjects = [];

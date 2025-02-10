@@ -2,7 +2,7 @@
 
 import { and, eq } from "@acme/db";
 import { db } from "@acme/db/client";
-import { StaffService } from "@acme/db/schema";
+import { BatchStaffService, StaffService } from "@acme/db/schema";
 
 import { getAuthSession } from "~/lib/auth";
 import { getBillableServices } from "./service.dta";
@@ -17,23 +17,24 @@ export type BillableForm = NonNullable<
 
 export async function getBillables() {
   const auth = await getAuthSession();
-  const list = await db.query.StaffService.findMany({
+  const list = await db.query.BatchStaffService.findMany({
     where: and(
-      eq(StaffService.schoolId, auth.workspace.schoolId),
-      eq(StaffService.termId, auth.workspace.termId),
+      eq(BatchStaffService.schoolId, auth.workspace.schoolId),
+      eq(BatchStaffService.termId, auth.workspace.termId),
     ),
     with: {
-      staff: true,
-      service: true,
+      // staff: true,
+      staffServices: true,
       // staffTx: true,
     },
   });
   return list;
 }
-export async function getBillableForm() {
+export async function getBillableForm(batchId?) {
   const auth = await getAuthSession();
   const services = await getBillableServices();
   const staffs = await getStaffList();
+
   return {
     services,
     serviceId: null,

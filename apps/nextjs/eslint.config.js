@@ -11,6 +11,7 @@ export default [
   {
     ignores: [".next/**"],
     rules: {
+      "no-unsafe-optional-chaining": "off",
       "@typescript-eslint/no-unnecessary-condition": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/require-await": "off",

@@ -125,6 +125,7 @@ export const Icons = {
   Warn: Info,
   Rocket: Rocket,
   Delete: Delete,
+  // HalfCheck: Check
   orders: ShoppingBag,
   project: FolderGit2,
   phone: Phone,

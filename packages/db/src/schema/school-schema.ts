@@ -71,6 +71,18 @@ export const AcademicClass = pgTable(
     unq: unique().on(t.name, t.schoolId),
   }),
 );
+export const AcademicSubClass = pgTable(
+  "academic_sub_class",
+  {
+    id: __uuidPri,
+    name: varchar("name", { length: 256 }).notNull(),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
+    academicClassId: _uuidRel("academic_class_id", AcademicClass.id).notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.name, t.schoolId),
+  }),
+);
 export const Subjects = pgTable(
   "Subjects",
   {
@@ -89,11 +101,11 @@ export const SessionClass = pgTable(
     id: __uuidPri,
     schoolId: _uuidRel("school_id", School.id).notNull(),
     academicSessionId: _uuidRel("academic_session_id", AcademicSession.id),
-    academicClassId: _uuidRel("academic_class_id", AcademicClass.id),
+    academicSubClassId: _uuidRel("academic_sub_class_id", AcademicSubClass.id),
     ...timeStamps,
   },
   (t) => ({
-    unq: unique().on(t.academicClassId, t.schoolId, t.academicSessionId),
+    unq: unique().on(t.academicSubClassId, t.schoolId, t.academicSessionId),
   }),
 );
 export const ClassSubject = pgTable(
@@ -102,7 +114,7 @@ export const ClassSubject = pgTable(
     id: __uuidPri,
     schoolId: _uuidRel("school_id", School.id).notNull(),
     academicSessionId: _uuidRel("academic_session_id", AcademicSession.id),
-    academicClassId: _uuidRel("academic_class_id", AcademicClass.id),
+    academicSubClassId: _uuidRel("academic_sub_class_id", AcademicSubClass.id),
     sessionClassId: _uuidRel("session_class_id", SessionClass.id),
     subjectId: _uuidRel("subject_id", Subjects.id),
     ...timeStamps,

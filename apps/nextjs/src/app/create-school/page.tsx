@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { Button } from "@acme/ui/button";
 import { toast } from "@acme/ui/toast";
 
-import useDataTransform from "../_components/exam-result/use-data-transform";
+import useDataTransform from "../exam-result/use-data-transform";
 import { bootstrapSchool } from "./bootstrap";
 
 export default function CreateSchoolPage() {

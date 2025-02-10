@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
-    "dev": "pnpm with-env next dev --port 4010",
+    "dev": "pnpm with-env next dev --port 4011",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "start": "pnpm with-env next start",
@@ -31,10 +31,12 @@
     "lodash": "^4.17.21",
     "lodash.first": "^3.0.0",
     "next": "^14.2.4",
+    "nuqs": "^2.2.3",
     "react": "catalog:react18",
     "react-dom": "catalog:react18",
     "superjson": "2.2.1",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",

@@ -1,0 +1,65 @@
+export const subjectsByCode = {
+  AR: "العربية",
+  FIQH: "الفقه",
+  TAJW: "التجويد",
+  QUR: "القرآن",
+  AQ: "التوحيد",
+  HADTH: "الحديث",
+  SEEROH: "السيرة",
+  ADHKR: "الأذكار",
+  MUTOON: "المتون",
+  Alif: "القراءة والكتابة",
+  // Alif: "القراءة والكتابة",
+  QOW: "قواعد اللغة",
+  HIFZ: "الحفظ",
+  QIR: "القراءة",
+  MUR: "المراجعة",
+  KHT: "الخط",
+};
+export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
+  ibtidaai: ["QUR", "TAJW", "ADHKR", "AQ", "HADTH", "AR", "Alif"],
+  tamheediA: ["QUR", "AQ", "HADTH"],
+  tamheediB: ["QUR", "AQ", "HADTH"],
+  tamheediC: ["QUR", "AQ", "HADTH"],
+  tamheediD: ["QUR", "AQ", "HADTH"],
+  tamheedi2: ["QUR", "AQ", "HADTH", "KHT", "QIR"],
+  ibtidaai2: [
+    "QUR",
+    "AR",
+    "TAJW",
+    "HADTH",
+    "MUTOON",
+    "FIQH",
+    "SEEROH",
+    "QOW",
+    "ADHKR",
+    "AQ",
+  ],
+  idaadi: [],
+  idaadi2: [],
+};
+
+export const subjectCodes = Object.keys(subjectsByCode);
+export const subjectNames = Object.values(subjectsByCode);
+
+export type SubjectNameTypes = typeof subjectNames;
+export type SubjectCodes = keyof typeof subjectsByCode;
+export const classByCodes = {
+  tamheediA: "الأول التمهيد ا",
+  tamheediB: "الأول التمهيد ب",
+  tamheediC: "الأول التمهيد ج",
+  tamheediD: "الأول التمهيد د",
+  tamheedi2: "الثاني التمهيد",
+  ibtidaai: "الأول الإبتدائي",
+  ibtidaai2: "الثاني الإبتدائي",
+  idaadi: "الأول الإعدادي",
+  idaadi2: "الثاني الإعدادي",
+};
+export const examStatus = {
+  permitted: "مس",
+  paid: "مد",
+  free: "م",
+  noStatus: "x",
+};
+export const classCodes = Object.keys(classByCodes);
+export type ClassCodes = keyof typeof classByCodes;

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { and, eq } from "@acme/db";
 import { db } from "@acme/db/client";
 import {
+  BatchStaffService,
   BillableService,
   StaffService,
   StaffSessionScheet,
@@ -43,4 +44,28 @@ export async function saveService(data) {
   );
   return service;
   // });
+}
+
+export async function getBatchService(id) {
+  const auth = await getAuthSession();
+  let batch = await db.query.BatchStaffService.findFirst({
+    where: eq(BatchStaffService.id, id),
+    with: {
+      staffServices: {
+        with: {
+          costs: {
+            with: {
+              service: true,
+            },
+          },
+          staff: true,
+        },
+      },
+    },
+  });
+  if (!batch)
+    batch = {
+      staffServices: [],
+    } as any;
+  return batch;
 }

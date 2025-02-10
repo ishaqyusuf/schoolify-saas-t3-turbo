@@ -1,7 +1,7 @@
 import { boolean, decimal, pgTable, varchar } from "drizzle-orm/pg-core";
 
 import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
-import { AcademicTerm, School } from "./school-schema";
+import { AcademicSession, AcademicTerm, School } from "./school-schema";
 import { BillableService, StaffTermSheet } from "./staff-schema";
 // import { StaffTermSheet } from "./staff-schema";
 import { StudentTermSheet } from "./student-schema";
@@ -81,14 +81,31 @@ export const InventorySales = pgTable("inventory_sales", {
   transactionId: _uuidRel("transaction_id", Transaction.id),
   ...timeStamps,
 });
+export const BatchStaffService = pgTable("batch_staff_service", {
+  id: __uuidPri,
+  title: varchar("title"),
+  note: varchar("note"),
+  schoolId: _uuidRel("school_id", School.id).notNull(),
+  totalAmount: decimal("total_amount").default("0"),
+  termId: _uuidRel("term_id", AcademicTerm.id),
+  sessionId: _uuidRel("session_id", AcademicSession.id),
+  ...timeStamps,
+});
 export const StaffService = pgTable("staff_service", {
   id: __uuidPri,
-  schoolId: _uuidRel("school_id", School.id).notNull(),
   note: varchar("note"),
   amount: decimal("amount").default("0"),
   staffId: _uuidRel("staff_id", User.id).notNull(),
-  serviceId: _uuidRel("service_id", BillableService.id),
-  termId: _uuidRel("term_id", AcademicTerm.id),
+  batchServiceId: _uuidRel("batch_service_id", BatchStaffService.id),
   transactionId: _uuidRel("staff_tx_id", Transaction.id, false),
+  ...timeStamps,
+});
+export const StaffServiceCost = pgTable("staff_service_cost", {
+  id: __uuidPri,
+  note: varchar("note"),
+  title: varchar("title"),
+  amount: decimal("amount").default("0"),
+  staffServiceId: _uuidRel("staff_service_id", StaffService.id),
+  serviceId: _uuidRel("service_id", BillableService.id),
   ...timeStamps,
 });

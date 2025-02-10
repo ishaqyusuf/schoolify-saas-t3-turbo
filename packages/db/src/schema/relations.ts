@@ -1,6 +1,12 @@
 import { relations } from "drizzle-orm";
 
-import { InventorySales, StaffService, Transaction } from "./accounting-schema";
+import {
+  BatchStaffService,
+  InventorySales,
+  StaffService,
+  StaffServiceCost,
+  Transaction,
+} from "./accounting-schema";
 import {
   AcademicClass,
   AcademicSession,
@@ -43,7 +49,10 @@ export const StaffClassRoleRelations = relations(
     subjectRoles: many(StaffSubjectRole),
   }),
 );
-
+export const AcademicSessionRelations = relations(AcademicSession, (r) => ({
+  batchServices: r.many(BatchStaffService),
+  terms: r.many(AcademicTerm),
+}));
 export const AcademicTermRelations = relations(
   AcademicTerm,
   ({ one, many }) => ({
@@ -59,7 +68,7 @@ export const SessionClassRelations = relations(
   SessionClass,
   ({ one, many }) => ({
     classRoom: one(AcademicClass, {
-      fields: [SessionClass.academicClassId],
+      fields: [SessionClass.academicSubClassId],
       references: [AcademicClass.id],
     }),
   }),
@@ -114,22 +123,41 @@ export const StaffTermSheetRelation = relations(StaffTermSheet, (r) => ({
   services: r.many(StaffService),
 }));
 export const StaffServiceRelations = relations(StaffService, (r) => ({
-  school: r.one(School, {
-    fields: [StaffService.schoolId],
-    references: [School.id],
-  }),
+  // school: r.one(School, {
+  //   fields: [StaffService.schoolId],
+  //   references: [School.id],
+  // }),
   staff: r.one(User, { fields: [StaffService.staffId], references: [User.id] }),
   staffTx: r.one(Transaction, {
     fields: [StaffService.transactionId],
     references: [Transaction.id],
   }),
-  service: r.one(BillableService, {
-    fields: [StaffService.serviceId],
-    references: [BillableService.id],
+  costs: r.many(StaffServiceCost),
+  batchService: r.one(BatchStaffService, {
+    fields: [StaffService.batchServiceId],
+    references: [BatchStaffService.id],
   }),
 }));
-export const SchoolRelations = relations(School, (r) => ({
+export const StaffServiceCostRelations = relations(StaffServiceCost, (r) => ({
+  service: r.one(StaffService, {
+    fields: [StaffServiceCost.serviceId],
+    references: [StaffService.id],
+  }),
+}));
+export const BatchStaffServiceRelations = relations(BatchStaffService, (r) => ({
+  school: r.one(School, {
+    fields: [BatchStaffService.schoolId],
+    references: [School.id],
+  }),
+  session: r.one(AcademicSession, {
+    fields: [BatchStaffService.sessionId],
+    references: [AcademicSession.id],
+  }),
   staffServices: r.many(StaffService),
+}));
+export const SchoolRelations = relations(School, (r) => ({
+  // staffServices: r.many(StaffService),
+  batchStaffServices: r.many(BatchStaffService),
 }));
 export const InventorySalesRelations = relations(InventorySales, (r) => ({
   transaction: r.one(Transaction, {

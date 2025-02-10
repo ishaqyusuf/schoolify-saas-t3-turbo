@@ -15,8 +15,8 @@ import {
   User,
 } from "@acme/db/schema";
 
-import type useDataTransform from "../_components/exam-result/use-data-transform";
-import { configs } from "../_components/exam-result/data";
+import type useDataTransform from "../exam-result/use-data-transform";
+import { configs } from "../exam-result/data";
 
 type Data = ReturnType<typeof useDataTransform>["data"];
 export async function bootstrapSchool(data: Data) {
@@ -53,7 +53,7 @@ export async function bootstrapSchool(data: Data) {
       // create Subjects
       const subjects = await createSubjects(classData.Subjects, {
         schoolId: school.id,
-        academicClassId: academicClass.id,
+        academicSubClassId: academicClass.id,
         academicSessionId: session.id,
         sessionClassId: sessionClass.id,
       });
@@ -178,7 +178,7 @@ async function createStudentSessionData({
 
 async function createSubjects(
   subjects,
-  { schoolId, academicClassId, academicSessionId, sessionClassId },
+  { schoolId, academicSubClassId, academicSessionId, sessionClassId },
 ) {
   const _Subjects = await db
     .insert(Subjects)
@@ -205,7 +205,7 @@ async function createSubjects(
             schoolId,
             subjectId: s.id,
             sessionClassId,
-            academicClassId,
+            academicSubClassId,
             academicSessionId,
           })),
         )
@@ -226,14 +226,14 @@ async function createSessionClass(_class, acadSession) {
     await db
       .insert(SessionClass)
       .values({
-        academicClassId: _class.id,
+        academicSubClassId: _class.id,
         schoolId: _class.schoolId,
         academicSessionId: acadSession.id,
       })
       .onConflictDoUpdate({
         target: [
           SessionClass.schoolId,
-          SessionClass.academicClassId,
+          SessionClass.academicSubClassId,
           SessionClass.academicSessionId,
         ],
         set: {
