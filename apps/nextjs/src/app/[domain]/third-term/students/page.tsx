@@ -244,6 +244,7 @@ function useContext() {
   );
   useEffect(() => {
     let filtered;
+    console.log();
     const staticClasses = composeStudent(dStore.studentData?.raw || "");
     let extraLines = Array(query?.extraLine || 0)
       ?.fill(null)

@@ -25,6 +25,9 @@ export async function loadDataAction(): Promise<{
     where: {
       name: "student-data",
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return {
     result: {
@@ -32,6 +35,7 @@ export async function loadDataAction(): Promise<{
       dataLoaded: true,
       studentData: {
         raw: (studentData?.data as any)?.raw,
+        id: studentData?.id,
       },
     },
   };

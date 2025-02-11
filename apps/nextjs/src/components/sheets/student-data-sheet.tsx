@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { saveQuestionAction } from "actions/save-question-action";
+import { saveStudentDataAction } from "actions/save-student-data-action";
 import { parseAsBoolean, useQueryStates } from "nuqs";
 
-import { FormProvider, useForm } from "@acme/ui";
+import { cn, FormProvider, useForm } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import { Icons } from "@acme/ui/common/icons";
 import FormSelect from "@acme/ui/controlled-inputs/form-select";
@@ -17,6 +18,7 @@ import {
 import { Textarea } from "@acme/ui/textarea";
 import { toast } from "@acme/ui/toast";
 
+import { arabic } from "~/fonts";
 import {
   classArray,
   classCodes,
@@ -46,32 +48,25 @@ export function StudentDataFormSheet({}) {
   const form = useForm({
     defaultValues: {
       id: null,
-      data: {
-        classCode: "",
-        raw: ``,
-        subjectCode: "",
-      } as NonNullable<Data["questions"]>[number]["data"],
+      raw: ``,
     },
   });
   const store = dataStore();
   async function save() {
     const data = form.getValues();
-    const resp = await saveQuestionAction(data.id, data.data);
+    const resp = await saveStudentDataAction(data.id, data.raw);
     ctx.close();
-    let questions = [...(store.questions || [])];
-    if (!data.id) questions.unshift(resp as any);
-    else {
-      questions = questions.map((q) => {
-        if (q.id == resp.id) q.data = resp.data as any;
-        return q;
-      });
-    }
-    store.update("questions", questions);
+    store.update("studentData.raw", data.raw as any);
+    store.update("studentData.id", resp.id);
+
     toast.success("Saved");
   }
   useEffect(() => {
     if (ctx.isOpened) {
-      form.reset();
+      form.reset({
+        raw: store.studentData?.raw,
+        id: store.studentData?.id,
+      });
     }
   }, [ctx.isOpened]);
   //   const [subjects]
@@ -87,15 +82,19 @@ export function StudentDataFormSheet({}) {
             <div className="flex-1">
               <Label>Data</Label>
               <Textarea
-                className="h-full"
+                autoCorrect="off"
+                spellCheck="false"
+                className={cn("h-full", arabic.className)}
                 dir="rtl"
-                {...form.register("data.raw")}
+                {...form.register("raw")}
               />
             </div>
           </FormProvider>
           <SheetFooter className="flex">
             <div className="flex-1"></div>
-            <Button className="">Save</Button>
+            <Button onClick={save} className="">
+              Save
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

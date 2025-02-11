@@ -34,6 +34,8 @@ type QuranClass = NonNullable<typeof quranClasses>[number];
 let studentId = 0;
 let studentClassId = 0;
 export const composeStudent = (rd) => {
+  console.log({ rd });
+  if (typeof rd !== "string") return [];
   studentId = 0;
   let cls: Class = null as any;
   const classList = [] as Class[];
