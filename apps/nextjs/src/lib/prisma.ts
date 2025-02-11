@@ -1,5 +1,6 @@
-import { PrismaClient } from "@acme/db";
+// import { PrismaClient } from "@acme/db";
+import { dayjs } from "@acme/utils";
 
 export const prisma = {} as any;
 
-export const pClient = PrismaClient;
+export const pClient = dayjs();
