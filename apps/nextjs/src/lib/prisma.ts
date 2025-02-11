@@ -1,6 +1,6 @@
 // import { PrismaClient } from "@acme/db";
-// import { dayjs } from "@acme/utils";
+import { toSentenceCase } from "@acme/utils";
 
 export const prisma = {} as any;
 
-// export const pClient = dayjs();
+export const pClient = toSentenceCase("");
