@@ -8,7 +8,7 @@ import { Toaster } from "@acme/ui/toast";
 
 import "~/app/globals.css";
 
-import { NuqsAdapter } from "nuqs/adapters/next/pages";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { env } from "~/env";
 

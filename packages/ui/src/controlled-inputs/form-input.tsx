@@ -2,15 +2,9 @@ import { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
 
 import { cn } from "..";
 import { Button } from "../button";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "../form";
+import { FormControl, FormField, FormItem, FormLabel } from "../form";
 import { Input } from "../input";
-import { Textarea } from "../textarea";
+import { Textarea, TextareaProps } from "../textarea";
 
 interface Props<T> {
   label?: string;
@@ -21,6 +15,7 @@ interface Props<T> {
   list?: boolean;
   size?: "sm" | "default" | "xs";
   prefix?: string;
+  dir?: TextareaProps["dir"];
   // defaultValue?:boolean
 }
 export default function FormInput<
@@ -36,6 +31,7 @@ export default function FormInput<
   list,
   prefix,
   size = "default",
+  dir,
   ...props
 }: Partial<ControllerProps<TFieldValues, TName>> & Props<TOptionType>) {
   return (
@@ -52,7 +48,7 @@ export default function FormInput<
             <div
               className={cn(
                 (suffix || prefix) && "flex items-center space-x-1",
-                "",
+                "flex flex-1 flex-col",
               )}
             >
               {prefix && (
@@ -67,8 +63,9 @@ export default function FormInput<
               )}
               {type == "textarea" ? (
                 <Textarea
+                  dir={dir}
                   placeholder={placeholder}
-                  className={cn(fieldState.error && "border-red-400")}
+                  className={cn(fieldState.error && "border-red-400", "flex-1")}
                   {...(list
                     ? {
                         defaultValue: field.value,
@@ -80,6 +77,7 @@ export default function FormInput<
               ) : (
                 <Input
                   type={type}
+                  dir={dir}
                   placeholder={placeholder}
                   // {...field}
                   // value={""}

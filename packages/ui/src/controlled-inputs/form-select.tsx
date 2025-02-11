@@ -37,6 +37,7 @@ interface Props<T extends FieldValues> {
   transformValue?(value?);
   size?: "sm" | "default" | "xs";
   listMode?: boolean;
+  dir?;
 }
 export default function FormSelect<
   TFieldValues extends FieldValues = FieldValues,
@@ -57,6 +58,7 @@ export default function FormSelect<
   transformValue,
   size = "default",
   listMode,
+  dir,
   ...props
 }: Partial<ControllerProps<TFieldValues, TName>> & Props<TOptionType>) {
   const [list, setList] = useState<any>([]);
@@ -95,6 +97,7 @@ export default function FormSelect<
               <ControlledCombox
                 size={size}
                 field={field}
+                dir={dir}
                 placeholder={placeholder}
                 onSelect={(s) => {
                   let value = itemValue(s);
@@ -112,6 +115,7 @@ export default function FormSelect<
               <Select
                 disabled={props.disabled}
                 onValueChange={field.onChange}
+                dir={dir}
                 {...(listMode
                   ? {
                       defaultValue: field.value,

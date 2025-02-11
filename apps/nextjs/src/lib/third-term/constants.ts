@@ -62,4 +62,10 @@ export const examStatus = {
   noStatus: "x",
 };
 export const classCodes = Object.keys(classByCodes);
+export const classArray = Object.entries(classByCodes).map(
+  ([value, label]) => ({ value, label }),
+);
+export const subjectsArray = Object.entries(subjectsByCode).map(
+  ([value, label]) => ({ value, label }),
+);
 export type ClassCodes = keyof typeof classByCodes;
