@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
@@ -10,11 +10,13 @@ import ExamPaperHeader from "~/components/exam-paper-header";
 import { QuestionFormSheet } from "~/components/sheets/question-form-sheet";
 import { arabic, moonDance } from "~/fonts";
 import { useQuestionForm } from "~/hooks/use-question-form";
+import { useStoreInit } from "~/hooks/use-store-init";
 import { questions } from "~/lib/third-term/questions";
 
 export default function Page() {
   const [classQuestions, setQuetionList] = useState(questions);
   const questionForm = useQuestionForm();
+  useStoreInit();
   return (
     <div className="">
       <div className={cn(arabic.className)}>

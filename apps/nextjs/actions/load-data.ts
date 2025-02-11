@@ -21,10 +21,18 @@ export async function loadDataAction(): Promise<{
     ...data,
     data: data.data as any,
   }));
+  const studentData = await prisma.posts.findFirst({
+    where: {
+      name: "student-data",
+    },
+  });
   return {
     result: {
       questions,
       dataLoaded: true,
+      studentData: {
+        raw: (studentData?.data as any)?.raw,
+      },
     },
   };
 }

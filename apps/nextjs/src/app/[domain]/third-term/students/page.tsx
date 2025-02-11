@@ -22,7 +22,9 @@ import {
 } from "@acme/ui/table";
 
 import ExamListHeader from "~/components/exam-list-header";
+import { StudentDataFormSheet } from "~/components/sheets/student-data-sheet";
 import { arabic } from "~/fonts";
+import { useStoreInit } from "~/hooks/use-store-init";
 import {
   composeStudent,
   quranClasses,
@@ -32,10 +34,12 @@ import {
   SubjectCodes,
   subjectCodes,
 } from "~/lib/third-term/constants";
+import { dataStore } from "~/lib/third-term/store";
 import { enToAr } from "../../exam-result-2/helper";
 
 export default function Page() {
   const ctx = useContext();
+
   return (
     <div className="grid grid-cols-5">
       <Filter ctx={ctx} />
@@ -118,6 +122,7 @@ export default function Page() {
           </div>
         ))}
       </div>
+      <StudentDataFormSheet />
     </div>
   );
 }
@@ -220,8 +225,9 @@ function Filter({ ctx }: { ctx: ReturnType<typeof useContext> }) {
   );
 }
 function useContext() {
-  const staticClasses = composeStudent();
-  const [classes, setClasses] = useState(staticClasses);
+  const [classes, setClasses] = useState([]);
+  useStoreInit();
+  const dStore = dataStore();
   const [query, setQuery] = useQueryStates(
     {
       show: parseAsStringLiteral(["quran", "default"] as const),
@@ -238,6 +244,7 @@ function useContext() {
   );
   useEffect(() => {
     let filtered;
+    const staticClasses = composeStudent(dStore.studentData?.raw || "");
     let extraLines = Array(query?.extraLine || 0)
       ?.fill(null)
       .map((s) => ({}));
@@ -288,7 +295,7 @@ function useContext() {
         })
         .filter((a) => a.students.length);
     setClasses(filtered);
-  }, [query]);
+  }, [query, dStore.studentData]);
   return {
     classes,
     query,

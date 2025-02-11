@@ -7,7 +7,7 @@ import { dotSet } from "../utils";
 const data: Partial<{
   studentData: {
     raw: string;
-    studentsByClass: {
+    studentsByClass?: {
       classCode: string;
       students: {}[];
     }[];

@@ -33,13 +33,12 @@ export const quranClasses = ["ق:تج", "ق:ح", "ق:أ", "ق:م", "ق:ج"] as c
 type QuranClass = NonNullable<typeof quranClasses>[number];
 let studentId = 0;
 let studentClassId = 0;
-export const composeStudent = () => {
+export const composeStudent = (rd) => {
   studentId = 0;
   let cls: Class = null as any;
   const classList = [] as Class[];
   let gender: Student["gender"] = "M";
-
-  studentsDataUpdated.split("\n").map((line) => {
+  rd.split("\n").map((line) => {
     if (line.includes("📃")) {
       if (cls) {
         classList.push({ ...cls });

@@ -1,10 +1,10 @@
-"use client";
-
 import { useEffect } from "react";
 import { saveQuestionAction } from "actions/save-question-action";
+import { parseAsBoolean, useQueryStates } from "nuqs";
 
 import { FormProvider, useForm } from "@acme/ui";
 import { Button } from "@acme/ui/button";
+import { Icons } from "@acme/ui/common/icons";
 import FormSelect from "@acme/ui/controlled-inputs/form-select";
 import { Label } from "@acme/ui/label";
 import {
@@ -17,7 +17,6 @@ import {
 import { Textarea } from "@acme/ui/textarea";
 import { toast } from "@acme/ui/toast";
 
-import { useQuestionForm } from "~/hooks/use-question-form";
 import {
   classArray,
   classCodes,
@@ -25,8 +24,25 @@ import {
 } from "~/lib/third-term/constants";
 import { Data, dataStore } from "~/lib/third-term/store";
 
-export function QuestionFormSheet({}) {
-  const ctx = useQuestionForm();
+export const useStudentForm = () => {
+  const [query, setQuery] = useQueryStates({
+    editStudentData: parseAsBoolean,
+  });
+  return {
+    isOpened: !!query.editStudentData,
+    edit() {
+      setQuery({
+        editStudentData: true,
+      });
+    },
+    close() {
+      setQuery(null);
+    },
+  };
+};
+
+export function StudentDataFormSheet({}) {
+  const ctx = useStudentForm();
   const form = useForm({
     defaultValues: {
       id: null,
@@ -57,47 +73,41 @@ export function QuestionFormSheet({}) {
     if (ctx.isOpened) {
       form.reset();
     }
-  }, [ctx.isOpened, ctx.questionId]);
+  }, [ctx.isOpened]);
   //   const [subjects]
   return (
-    <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
-      <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-1/2 sm:p-4">
-        <SheetHeader>
-          <SheetTitle>
-            {ctx.questionId ? "Edit Question" : "Create Question"}
-          </SheetTitle>
-        </SheetHeader>
-        <FormProvider {...form}>
-          <div className="flex-1">
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect
-                control={form.control}
-                name="data.classCode"
-                options={classArray}
+    <div>
+      {" "}
+      <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
+        <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-1/2 sm:p-4">
+          <SheetHeader>
+            <SheetTitle>{"Edit Student Data"}</SheetTitle>
+          </SheetHeader>
+          <FormProvider {...form}>
+            <div className="flex-1">
+              <Label>Data</Label>
+              <Textarea
+                className="h-full"
                 dir="rtl"
-                label={"Class"}
-              />
-              <FormSelect
-                control={form.control}
-                name="data.subjectCode"
-                options={subjectsArray}
-                dir="rtl"
-                label={"Subject"}
+                {...form.register("data.raw")}
               />
             </div>
-            <Label>Question</Label>
-            <Textarea
-              className="h-full"
-              dir="rtl"
-              {...form.register("data.raw")}
-            />
-          </div>
-        </FormProvider>
-        <SheetFooter className="flex">
-          <div className="flex-1"></div>
-          <Button className="">Save</Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+          </FormProvider>
+          <SheetFooter className="flex">
+            <div className="flex-1"></div>
+            <Button className="">Save</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      <div className="fixed bottom-0 right-0 m-4">
+        <Button
+          onClick={() => {
+            ctx.edit();
+          }}
+        >
+          <Icons.add className="size-4" />
+        </Button>
+      </div>
+    </div>
   );
 }
