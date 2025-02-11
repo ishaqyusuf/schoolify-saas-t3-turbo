@@ -17,8 +17,6 @@ import qs from "qs";
 
 import { formatDate, useDebounce } from "@acme/utils";
 
-import useQueryParams from "../../hooks/use-query-params";
-
 export const dataTableContext = createContext({});
 export type DataTypeType = ReturnType<typeof useComposeDataTable>;
 export const useDataTableContext = (): DataTypeType =>
@@ -62,9 +60,9 @@ export function useComposeDataTable(
 
   const debouncedQuery = useDebounce(dataQueryString, 800);
 
-  const { queryParams, setQueryParams } = useQueryParams();
+  // const { queryParams, setQueryParams } = useQueryParams();
   React.useEffect(() => {
-    setQueryParams(qs.parse(debouncedQuery), true);
+    // setQueryParams(qs.parse(debouncedQuery), true);
   }, [debouncedQuery]);
   function updateDataQuery(_sorting, cFilters, pag) {
     const params: any = {};

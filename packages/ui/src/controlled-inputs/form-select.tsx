@@ -158,6 +158,7 @@ export function ControlledCombox({
   itemText,
   size,
   itemValue,
+  dir,
 }) {
   const [show, setShow] = useState(false);
   return (
@@ -194,6 +195,7 @@ export function ControlledCombox({
       <PopoverContent className="min-w-[250px] max-w-[400px] p-0">
         <Command>
           <CommandInput
+            dir={dir}
             onValueChange={(e) => {
               // console.log(e);
               // setValue(e);
