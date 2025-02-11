@@ -1,6 +1,8 @@
 "use server";
 
-import { prisma } from "@acme/db";
+import { prisma } from "~/lib/prisma";
+
+// import { prisma } from "@acme/db";
 
 export async function saveStudentDataAction(id, data) {
   const res = id

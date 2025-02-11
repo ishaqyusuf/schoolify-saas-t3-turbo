@@ -1,6 +1,7 @@
 "use server";
 
-import { prisma } from "@acme/db";
+import { prisma } from "~/lib/prisma";
+// import { prisma } from "@acme/db";
 
 import { Data } from "~/lib/third-term/store";
 

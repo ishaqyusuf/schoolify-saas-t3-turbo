@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@acme/ui/table";
 
+import { CheckFilter } from "~/components/check-filter";
 import ExamListHeader from "~/components/exam-list-header";
 import { StudentDataFormSheet } from "~/components/sheets/student-data-sheet";
 import { arabic } from "~/fonts";
@@ -29,11 +30,7 @@ import {
   composeStudent,
   quranClasses,
 } from "~/lib/third-term/compose-students";
-import {
-  classByCodes,
-  SubjectCodes,
-  subjectCodes,
-} from "~/lib/third-term/constants";
+import { classByCodes, SubjectCodes } from "~/lib/third-term/constants";
 import { dataStore } from "~/lib/third-term/store";
 import { enToAr } from "../../exam-result-2/helper";
 
@@ -126,27 +123,6 @@ export default function Page() {
     </div>
   );
 }
-function CheckFilter({ label, ctx, value, list, qk }) {
-  const query = ctx.query;
-  return (
-    <div className="my-0.5 inline-flex items-center gap-2">
-      <Checkbox
-        onCheckedChange={(e) => {
-          let clis = (query?.[qk] || "")?.split(",");
-          if (e) clis?.push(value);
-          else clis = clis?.filter((a) => a !== value);
-          console.log(clis);
-          const classes = clis?.filter(Boolean).join(",");
-          ctx.setQuery({
-            [qk]: classes,
-          });
-        }}
-        checked={query?.[qk]?.split(",").some((s) => s === value)}
-      />
-      <Label>{label}</Label>
-    </div>
-  );
-}
 function Filter({ ctx }: { ctx: ReturnType<typeof useContext> }) {
   const query = ctx.query;
   return (
@@ -155,20 +131,7 @@ function Filter({ ctx }: { ctx: ReturnType<typeof useContext> }) {
         <Label>Class</Label>
         {Object.entries(classByCodes).map(([k, v], i) => (
           <div key={i}>
-            <Checkbox
-              onCheckedChange={(e) => {
-                let clis = (query?.classes || "")?.split(",");
-                if (e) clis?.push(k);
-                else clis = clis?.filter((a) => a != k);
-                console.log(clis);
-                const classes = clis?.filter(Boolean).join(",");
-                ctx.setQuery({
-                  classes,
-                });
-              }}
-              checked={query?.classes?.split(",").includes(k)}
-            />
-            <Label>{v}</Label>
+            <CheckFilter ctx={ctx} label={v} value={k} qk="classes" />
           </div>
         ))}
       </div>
