@@ -127,7 +127,7 @@ export default function FormSelect<
                 <SelectTrigger className={cn(size == "sm" && "h-8")}>
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
-                <SelectContent className="max-h-[40vh] overflow-auto">
+                <SelectContent className="smax-h-[40vh] overflow-auto">
                   {(loader ? list : options)?.map((option, index) =>
                     SelItem ? (
                       <SelItem option={option} key={index} />
