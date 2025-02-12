@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { cva } from "class-variance-authority";
 import { parseAsInteger, useQueryState, useQueryStates } from "nuqs";
 
@@ -67,17 +67,16 @@ const header = [
 ];
 function FilterOption({ name, label }) {
   const store = examStore();
-  const searchParams = useSearchParams();
   // const [q, setQ] = useQueryState(name, {
   //   throttleMs: 300,
   // });
   const router = useRouter();
-  const initialValue = decodeURIComponent(searchParams.get(name) || "");
+  const initialValue = decodeURIComponent("");
   const [q, setQ] = useState(initialValue);
   useEffect(() => {
     store.setQuery(name, q);
     store.filterData();
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams("");
     if (q) {
       params.set(name, q);
     } else {
