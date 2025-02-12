@@ -15,7 +15,6 @@ import { questions } from "~/lib/third-term/questions";
 import { dataStore } from "~/lib/third-term/store";
 
 export default function Page() {
-  const [classQuestions, setQuetionList] = useState(questions);
   const questionForm = useQuestionForm();
   useStoreInit();
   const store = dataStore();
