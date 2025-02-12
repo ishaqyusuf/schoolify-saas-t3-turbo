@@ -5,10 +5,6 @@
     "topo": {
       "dependsOn": ["^topo"]
     },
-    "vercel-build": {
-      "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".cache/tsbuildinfo.json", "dist/**"]
-    },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"]
