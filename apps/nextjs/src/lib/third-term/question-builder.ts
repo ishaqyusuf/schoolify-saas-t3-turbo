@@ -97,3 +97,74 @@ export const questionBuilder = () => {
   };
   return ctx;
 };
+export const buildQuestion = (data) => {
+  const spltd = data?.split("\n");
+  let lines: {
+    type: "instruction" | "question" | "grid";
+    qNo?: string;
+    grids?: { text: string; index: string }[];
+    text?: string;
+    align?: "center" | "right" | "left";
+    options?: { text: string; index: string }[];
+  }[] = [];
+
+  spltd.map((ln) => {
+    let [index, body] = ln?.split("'");
+    if (body) {
+      const [q, ...optns] = body.split("`");
+      lines.push({
+        qNo: index,
+        type: "question",
+        text: transformText(q),
+        options: optns?.map((o, i) => ({
+          index: optionIndex(i),
+          text: transformText(o),
+        })),
+      });
+      return;
+    }
+    const [_, centeredInstr] = ln?.split("__");
+    if (ln?.trim()?.startsWith("__")) {
+      lines.push({
+        text: centeredInstr,
+        align: "center",
+        type: "instruction",
+      });
+      return;
+    }
+    const grids = ln?.split("_");
+    if (grids.length > 1 || ln?.includes("،")) {
+      lines.push({
+        type: "grid",
+        grids: grids.map((g, i) => {
+          const [gInd, gTex] = g?.split(`،`);
+          return {
+            text: transformText(gTex || gInd),
+            index: gTex ? gInd : null,
+          };
+        }),
+      });
+    }
+  });
+  return lines;
+};
+function optionIndex(i) {
+  return [`ا`, "ب", "ج", "د", "ه", "و", "ز"][i];
+}
+function transformText(q) {
+  const replc = {
+    "...": ". . . . . . . . . . . . . . .",
+    "..": ". . . . . . . . . .",
+    ف٣: ". . . . . . . . . . . . . . .",
+    "))": "»",
+    ")": "»",
+    "((": "«",
+    "(": "«",
+
+    // "..": ""
+    // ".": ""
+  };
+  // ""?.replaceAll()
+  Object.entries(replc).map(([s, r]) => (q = q?.replaceAll(s, r)));
+  return q;
+}

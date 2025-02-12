@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { saveQuestionAction } from "actions/save-question-action";
 
-import { FormProvider, useForm } from "@acme/ui";
+import { cn, FormProvider, useForm } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import FormSelect from "@acme/ui/controlled-inputs/form-select";
 import { Label } from "@acme/ui/label";
@@ -17,6 +17,7 @@ import {
 import { Textarea } from "@acme/ui/textarea";
 import { toast } from "@acme/ui/toast";
 
+import { arabic } from "~/fonts";
 import { useQuestionForm } from "~/hooks/use-question-form";
 import {
   classArray,
@@ -55,7 +56,9 @@ export function QuestionFormSheet({}) {
   }
   useEffect(() => {
     if (ctx.isOpened) {
-      form.reset();
+      let eData = store.questions?.find((q) => ctx.questionId == q.id);
+
+      form.reset(eData);
     }
   }, [ctx.isOpened, ctx.questionId]);
   //   const [subjects]
@@ -87,7 +90,7 @@ export function QuestionFormSheet({}) {
             </div>
             <Label>Question</Label>
             <Textarea
-              className="h-full"
+              className={cn("h-full", arabic.className)}
               dir="rtl"
               {...form.register("data.raw")}
             />
@@ -95,7 +98,9 @@ export function QuestionFormSheet({}) {
         </FormProvider>
         <SheetFooter className="flex">
           <div className="flex-1"></div>
-          <Button className="">Save</Button>
+          <Button onClick={save} className="">
+            Save
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

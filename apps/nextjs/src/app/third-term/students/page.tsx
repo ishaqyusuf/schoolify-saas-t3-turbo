@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@acme/ui/table";
 
+import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { CheckFilter } from "~/components/check-filter";
 import ExamListHeader from "~/components/exam-list-header";
 import { StudentDataFormSheet } from "~/components/sheets/student-data-sheet";
@@ -32,7 +33,6 @@ import {
 } from "~/lib/third-term/compose-students";
 import { classByCodes, SubjectCodes } from "~/lib/third-term/constants";
 import { dataStore } from "~/lib/third-term/store";
-import { enToAr } from "../../exam-result-2/helper";
 
 export default function Page() {
   const ctx = useContext();
@@ -93,7 +93,7 @@ export default function Page() {
                   <TableRow key={sid} className="">
                     <TableCell className="w-10">
                       {!student.studentId || (
-                        <span>{enToAr(student.studentId)}.</span>
+                        <span>{enToAr(student.studentClassId)}.</span>
                       )}
                     </TableCell>
                     <TableCell>

@@ -3,7 +3,7 @@ import { cn } from "@acme/ui";
 import { configs } from "~/app/exam-result/data";
 import { moonDance } from "~/fonts";
 
-export default function ExamPaperHeader({ subject, term = "الثانية", fasl }) {
+export default function ExamPaperHeader({ subject, term = "الثالثة", fasl }) {
   return (
     <div className="mb-3">
       <div className="space-y-2">
