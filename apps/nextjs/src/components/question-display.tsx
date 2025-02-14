@@ -23,6 +23,36 @@ const pageVariant = cva("", {
     },
   },
 });
+const questionStyle = cva("", {
+  variants: {
+    t: {
+      xl: "text-xl",
+      "2xl": "text-2xl",
+      "3xl": "text-3xl",
+      "4xl": "text-4xl",
+      "5xl": "text-5xl",
+    },
+    mt: {
+      "1": "mt-1",
+      "2": "mt-2",
+      "4": "mt-4",
+      "6": "mt-6",
+      "8": "mt-8",
+      "10": "mt-10",
+      "12": "mt-12",
+    },
+    bb: {
+      "1": "border-b-2 border-dashed border-muted-foreground/60",
+    },
+    h: {
+      "8": "h-8",
+      "12": "h-12",
+      "16": "h-16",
+      "20": "h-20",
+      "24": "h-24",
+    },
+  },
+});
 export function QuestionDisplay({ index }) {
   const store = dataStore();
   const question = store.questions?.[index];
@@ -55,7 +85,7 @@ export function QuestionDisplay({ index }) {
         <div className="absolute top-0 flex print:hidden">
           <Button
             onClick={() => {
-              qForm.editQuestion(question.id);
+              qForm.editQuestion(question?.id);
             }}
           >
             Edit
@@ -82,16 +112,23 @@ export function QuestionDisplay({ index }) {
             key={i}
           >
             <ExamPaperHeader
-              fasl={classByCodes[question?.data?.classCode]}
-              subject={subjectsByCode[question?.data?.subjectCode]}
+              fasl={classByCodes[question?.data?.classCode!!]}
+              subject={subjectsByCode[question?.data?.subjectCode!!]}
             />
             {questLines?.map((ln, i) => (
-              <div className={cn(ln.qNo && "mt-2")}>
+              <div
+                className={cn(
+                  ln.qNo && "mt-2",
+                  "my-2",
+                  questionStyle(ln?.styles),
+                )}
+              >
                 {/* {!ln.options?.length || ( */}
                 <div
                   className={cn(
-                    "inline-flex flex-wrap space-x-4",
+                    "w-fulls inline-flex flex-1 flex-wrap space-x-4",
                     ln.type == "instruction" && "w-full flex-1 justify-center",
+                    ln.grids?.length && "hidden",
                   )}
                 >
                   {!ln.qNo || <span className="mx-2">{ln.qNo}.</span>}
@@ -109,7 +146,7 @@ export function QuestionDisplay({ index }) {
                 {!ln?.grids?.length || (
                   <div
                     className={cn(
-                      "mr-6 grid gap-4",
+                      "mr-6 grid gap-2",
                       ln.grids.length == 2 && "grid-cols-2",
                       ln.grids.length == 3 && "grid-cols-3",
                       ln.grids.length == 4 && "grid-cols-4",
@@ -117,10 +154,12 @@ export function QuestionDisplay({ index }) {
                   >
                     {ln.grids?.map((g, i) => (
                       <div key={i}>
-                        <span className="borders ml-2 inline-flex size-5 items-center justify-center rounded-full border-muted-foreground text-sm">
-                          {g.index}
-                          {")"}
-                        </span>
+                        {g.index && (
+                          <span className="borders ml-2 inline-flex size-5 items-center justify-center rounded-full border-muted-foreground text-sm">
+                            {g.index}
+                            {")"}
+                          </span>
+                        )}
                         <span>{g.text}</span>
                       </div>
                     ))}

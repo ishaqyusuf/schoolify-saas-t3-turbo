@@ -104,6 +104,7 @@ export const buildQuestion = (data) => {
     qNo?: string;
     grids?: { text: string; index: string }[];
     text?: string;
+    styles?;
     align?: "center" | "right" | "left";
     options?: { text: string; index: string }[];
   }[] = [];
@@ -144,7 +145,27 @@ export const buildQuestion = (data) => {
           };
         }),
       });
+      return;
     }
+    const spls = ln?.split("~");
+    let styles = {};
+    let texts = [];
+    spls.map((s, i) => {
+      const [st, v] = s?.split("-");
+      if (v) {
+        styles[st] = v;
+      } else {
+        //
+        texts.push(s);
+      }
+    });
+    // if (texts?.length) {
+    lines.push({
+      type: "question",
+      text: texts[0],
+      styles,
+    });
+    // }
   });
   return lines;
 };
