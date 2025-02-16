@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@acme/ui/dropdown-menu";
+import { SidebarTrigger } from "@acme/ui/sidebar";
 
 export default function ThirdTermHeader() {
   const links = ["questions", "students", "results", "students-quran"];
@@ -23,7 +24,9 @@ export default function ThirdTermHeader() {
     // console.log(path);
   }, [path]);
   return (
-    <div className="flex h-12 items-center justify-end gap-4 border-b px-4 print:hidden">
+    <div className="flex h-12 items-center gap-4 border-b px-4 print:hidden">
+      <SidebarTrigger />
+      <div className="flex-1"></div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button size="sm">

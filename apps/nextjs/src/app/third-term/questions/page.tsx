@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import { Icons } from "@acme/ui/common/icons";
+import Portal from "@acme/ui/common/portal";
+import { useSidebar } from "@acme/ui/sidebar";
 
 import { QuestionDisplay } from "~/components/question-display";
 import { QuestionFilter } from "~/components/question-filter";
@@ -18,10 +20,15 @@ export default function Page() {
   const questionForm = useQuestionForm();
   useStoreInit();
   const store = dataStore();
+  const sb = useSidebar();
   return (
     <div className="flex">
       <div className="">
-        <QuestionFilter />
+        {sb.open && (
+          <Portal nodeId={"sideBarContent"}>
+            <QuestionFilter />
+          </Portal>
+        )}
       </div>
       <div className="flex-1">
         {store.questions?.map((q, i) => <QuestionDisplay key={i} index={i} />)}

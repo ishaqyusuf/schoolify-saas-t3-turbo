@@ -24,7 +24,7 @@ import { CheckFilter } from "./check-filter";
 export function QuestionFilter({}) {
   const ctx = useQuestionQuery();
   return (
-    <div className={cn("sm:w-[156px] print:hidden", arabic.style)} dir="rtl">
+    <div className={cn("sm:w-[156px]s print:hidden", arabic.style)} dir="rtl">
       {classCodes.map((cc) => (
         <div key={cc}>
           <Section label={classByCodes[cc]}>
