@@ -1,12 +1,8 @@
-import {
-  classByCodes,
-  ClassCodes,
-  SubjectCodes,
-  subjectsByCode,
-} from "./constants";
+import type { ClassCodes, SubjectCodes } from "./constants";
+import { classByCodes, subjectsByCode } from "./constants";
 
 export const questionBuilder = () => {
-  let obj: {
+  const obj: {
     questions: {
       subject?: string;
       questionLines?: {
@@ -99,7 +95,7 @@ export const questionBuilder = () => {
 };
 export const buildQuestion = (data) => {
   const spltd = data?.split("\n");
-  let lines: {
+  const lines: {
     type: "instruction" | "question" | "grid";
     qNo?: string;
     grids?: { text: string; index: string }[];
@@ -110,7 +106,7 @@ export const buildQuestion = (data) => {
   }[] = [];
 
   spltd.map((ln) => {
-    let [index, body] = ln?.split("'");
+    const [index, body] = ln?.split("'");
     if (body) {
       const [q, ...optns] = body.split("`");
       lines.push({
@@ -148,8 +144,8 @@ export const buildQuestion = (data) => {
       return;
     }
     const spls = ln?.split("~");
-    let styles = {};
-    let texts = [];
+    const styles = {};
+    const texts = [];
     spls.map((s, i) => {
       const [st, v] = s?.split("-");
       if (v) {
@@ -162,7 +158,7 @@ export const buildQuestion = (data) => {
     // if (texts?.length) {
     lines.push({
       type: "question",
-      text: texts[0],
+      text: transformText(texts[0]),
       styles,
     });
     // }

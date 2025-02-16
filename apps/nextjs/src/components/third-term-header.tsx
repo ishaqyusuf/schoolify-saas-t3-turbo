@@ -5,6 +5,13 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
 import { Button } from "@acme/ui/button";
+import { Icons } from "@acme/ui/common/icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@acme/ui/dropdown-menu";
 
 export default function ThirdTermHeader() {
   const links = ["questions", "students", "results", "students-quran"];
@@ -16,18 +23,21 @@ export default function ThirdTermHeader() {
     // console.log(path);
   }, [path]);
   return (
-    <div className="flex h-12 items-center justify-end gap-4 border-b print:hidden">
-      {links.map((lnk) => (
-        <Button
-          asChild
-          size="sm"
-          className="capitalize"
-          key={lnk}
-          variant={current == lnk ? "default" : "secondary"}
-        >
-          <Link href={`/third-term/${lnk}`}>{lnk}</Link>
-        </Button>
-      ))}
+    <div className="flex h-12 items-center justify-end gap-4 border-b px-4 print:hidden">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="sm">
+            <Icons.menu className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {links.map((lnk) => (
+            <DropdownMenuItem asChild className="capitalize" key={lnk}>
+              <Link href={`/third-term/${lnk}`}>{lnk}</Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

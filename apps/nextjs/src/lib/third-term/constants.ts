@@ -15,6 +15,7 @@ export const subjectsByCode = {
   QIR: "القراءة",
   MUR: "المراجعة",
   KHT: "الخط",
+  MAHF: "المحفوظة",
 };
 export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
   ibtidaai: ["QUR", "TAJW", "ADHKR", "AQ", "HADTH", "AR", "Alif"],
@@ -36,7 +37,7 @@ export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
     "AQ",
   ],
   idaadi: [],
-  idaadi2: ["QUR", "HADTH", "FIQH"],
+  idaadi2: ["QUR", "HADTH", "FIQH", "MAHF", "ADHKR"],
 };
 
 export const subjectCodes = Object.keys(subjectsByCode);
