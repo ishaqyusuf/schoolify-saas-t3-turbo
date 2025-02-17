@@ -25,7 +25,7 @@ export default function Page() {
     <div className="flex w-screen overflow-hidden sm:w-auto">
       <div className="">
         {sb.open && (
-          <Portal waitSec={0} nodeId={"sideBarContent"}>
+          <Portal waitSec={2} nodeId={"sideBarContent"}>
             <QuestionFilter />
           </Portal>
         )}
