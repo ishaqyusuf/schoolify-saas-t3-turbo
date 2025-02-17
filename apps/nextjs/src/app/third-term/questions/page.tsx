@@ -22,7 +22,7 @@ export default function Page() {
   const store = dataStore();
   const sb = useSidebar();
   return (
-    <div className="flex">
+    <div className="flex w-screen overflow-hidden sm:w-auto">
       <div className="">
         {sb.open && (
           <Portal waitSec={0} nodeId={"sideBarContent"}>

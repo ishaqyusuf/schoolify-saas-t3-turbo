@@ -76,7 +76,7 @@ export function QuestionDisplay({ index }) {
       dir={"rtl"}
       className={cn(
         arabic.className,
-        "space-y-2s relative w-[8.27in]",
+        "space-y-2s relative sm:w-[8.27in]",
 
         !show && "hidden",
       )}
@@ -112,8 +112,8 @@ export function QuestionDisplay({ index }) {
             key={i}
           >
             <ExamPaperHeader
-              fasl={classByCodes[question?.data?.classCode!!]}
-              subject={subjectsByCode[question?.data?.subjectCode!!]}
+              fasl={classByCodes[question?.data?.classCode]}
+              subject={subjectsByCode[question?.data?.subjectCode]}
             />
             {questLines?.map((ln, i) => (
               <div
