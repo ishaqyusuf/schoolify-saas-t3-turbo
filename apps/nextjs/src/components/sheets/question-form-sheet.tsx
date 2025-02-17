@@ -91,7 +91,7 @@ export function QuestionFormSheet({}) {
             </div>
             <Label>Question</Label>
             <Textarea
-              className={cn("h-full", arabic.className, "px-4 text-lg")}
+              className={cn("h-full", arabic.className, "px-4 pb-16 text-lg")}
               dir="rtl"
               {...form.register("data.raw")}
             />
