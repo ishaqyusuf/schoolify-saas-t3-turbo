@@ -13,7 +13,6 @@ import { QuestionFilter } from "~/components/question-filter";
 import { QuestionFormSheet } from "~/components/sheets/question-form-sheet";
 import { useQuestionForm } from "~/hooks/use-question-form";
 import { useStoreInit } from "~/hooks/use-store-init";
-import { questions } from "~/lib/third-term/questions";
 import { dataStore } from "~/lib/third-term/store";
 
 export default function Page() {
@@ -22,7 +21,7 @@ export default function Page() {
   const store = dataStore();
   const sb = useSidebar();
   return (
-    <div className="flex w-screen overflow-hidden sm:w-auto">
+    <div className="flex w-screen overflow-hidden sm:w-auto print:overflow-visible">
       <div className="">
         {sb.open && (
           <Portal waitSec={2} nodeId={"sideBarContent"}>

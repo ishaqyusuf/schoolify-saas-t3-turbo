@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { cva } from "class-variance-authority";
 
 import { cn, FormProvider, useForm } from "@acme/ui";
@@ -126,20 +127,26 @@ export function QuestionDisplay({ index }) {
                 {/* {!ln.options?.length || ( */}
                 <div
                   className={cn(
-                    "w-fulls inline-flex flex-1 flex-wrap space-x-4",
+                    "w-fulls my-0.5 inline-flex flex-1 flex-wrap space-x-2",
                     ln.type == "instruction" && "w-full flex-1 justify-center",
                     ln.grids?.length && "hidden",
                   )}
                 >
                   {!ln.qNo || <span className="mx-2">{ln.qNo}.</span>}
-                  <div className="flex-1 text-center">{ln.text}</div>
+                  <span className="">{ln.text}</span>
                   {ln.options?.map((o, oi) => (
-                    <div key={oi} className="flex items-center space-x-4">
-                      <div className="ml-2 inline-flex size-5 items-center justify-center rounded-full border border-muted-foreground text-sm">
+                    <Fragment key={oi}>
+                      <div
+                        className={cn(
+                          "inline-flex size-5 items-center justify-center rounded-full border border-muted-foreground text-sm",
+                          "mx-2",
+                          oi == 0 && "mr-3",
+                        )}
+                      >
                         {o.index}
                       </div>
                       <div className="">{o.text}</div>
-                    </div>
+                    </Fragment>
                   ))}
                 </div>
                 {/* )} */}
@@ -150,6 +157,7 @@ export function QuestionDisplay({ index }) {
                       ln.grids.length == 2 && "grid-cols-2",
                       ln.grids.length == 3 && "grid-cols-3",
                       ln.grids.length == 4 && "grid-cols-4",
+                      ln.grids.length == 5 && "grid-cols-5",
                     )}
                   >
                     {ln.grids?.map((g, i) => (

@@ -5,3 +5,12 @@ model Posts {
     createdAt DateTime  @default(now()) @db.Timestamp(0)
     deletedAt DateTime?
 }
+
+// model ExampleResults {
+//     id          Int    @unique @default(autoincrement())
+//     name        String
+//     classCode   String
+//     subjectCode String
+//     score       Int?
+//     obtainable  Int
+// }
