@@ -25,7 +25,7 @@ export default function Page() {
     <div className="flex">
       <div className="">
         {sb.open && (
-          <Portal nodeId={"sideBarContent"}>
+          <Portal waitSec={0} nodeId={"sideBarContent"}>
             <QuestionFilter />
           </Portal>
         )}

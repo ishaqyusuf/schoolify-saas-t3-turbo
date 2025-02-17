@@ -17,6 +17,7 @@ import {
 import { Textarea } from "@acme/ui/textarea";
 import { toast } from "@acme/ui/toast";
 
+import type { Data } from "~/lib/third-term/store";
 import { arabic } from "~/fonts";
 import { useQuestionForm } from "~/hooks/use-question-form";
 import {
@@ -24,7 +25,7 @@ import {
   classCodes,
   subjectsArray,
 } from "~/lib/third-term/constants";
-import { Data, dataStore } from "~/lib/third-term/store";
+import { dataStore } from "~/lib/third-term/store";
 
 export function QuestionFormSheet({}) {
   const ctx = useQuestionForm();
@@ -56,7 +57,7 @@ export function QuestionFormSheet({}) {
   }
   useEffect(() => {
     if (ctx.isOpened) {
-      let eData = store.questions?.find((q) => ctx.questionId == q.id);
+      const eData = store.questions?.find((q) => ctx.questionId == q.id);
 
       form.reset(eData);
     }
@@ -64,7 +65,7 @@ export function QuestionFormSheet({}) {
   //   const [subjects]
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
-      <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-1/2 sm:p-4">
+      <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-2/3 sm:p-4 lg:w-2/3">
         <SheetHeader>
           <SheetTitle>
             {ctx.questionId ? "Edit Question" : "Create Question"}
@@ -90,7 +91,7 @@ export function QuestionFormSheet({}) {
             </div>
             <Label>Question</Label>
             <Textarea
-              className={cn("h-full", arabic.className)}
+              className={cn("h-full", arabic.className, "px-4 text-lg")}
               dir="rtl"
               {...form.register("data.raw")}
             />

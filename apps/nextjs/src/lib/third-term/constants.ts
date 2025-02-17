@@ -36,7 +36,7 @@ export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
     "ADHKR",
     "AQ",
   ],
-  idaadi: [],
+  idaadi: ["SEEROH", "AR", "HADTH"],
   idaadi2: ["QUR", "HADTH", "FIQH", "MAHF", "ADHKR"],
 };
 

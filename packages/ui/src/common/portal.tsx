@@ -6,8 +6,9 @@ import { createPortal } from "react-dom";
 interface Props {
   nodeId;
   children;
+  waitSec?;
 }
-export default function Portal({ nodeId, children }: Props) {
+export default function Portal({ nodeId, children, waitSec = 2 }: Props) {
   // const node = document.getElementById(nodeId);
   const [node, setNode] = useState<any>(null);
   useEffect(() => {
@@ -15,7 +16,7 @@ export default function Portal({ nodeId, children }: Props) {
       // setPaymentState(Math.random() > 0.5 ? "success" : "failure");
       // const p = await validSquarePayment(paymentId);
       setNode(() => document.getElementById(nodeId));
-    }, 2000);
+    }, waitSec * 1000);
 
     return () => clearTimeout(timer);
   }, []);
