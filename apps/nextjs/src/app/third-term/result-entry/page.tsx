@@ -13,8 +13,8 @@ export default async function Page({ searchParams }) {
   const result = await loadResultEntriesAction(searchParams);
   return (
     <>
-      {result?.map((result) => (
-        <ResultClassList key={result.id} data={result} />
+      {result?.map((result, index) => (
+        <ResultClassList key={index} data={result} />
       ))}
       <SubjectAssessmentFormSheet />
       <StudentAssessmentResultForm />

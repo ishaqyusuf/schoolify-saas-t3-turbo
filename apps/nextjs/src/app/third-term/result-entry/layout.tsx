@@ -5,7 +5,7 @@ export default async function Layout({ children, searchParams }) {
 
   return (
     <>
-      <ResultEntrySideBar searchParams={searchParams} />
+      {/* <ResultEntrySideBar searchParams={searchParams} /> */}
       {children}
     </>
   );

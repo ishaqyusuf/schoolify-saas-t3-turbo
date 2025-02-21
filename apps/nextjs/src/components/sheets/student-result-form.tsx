@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
+import { getStudentAssessmentFormAction } from "actions/get-student-assement-form";
 import {
   getSubjectAssessmentFormAction,
   SubjectAssessmentForm,
@@ -50,6 +51,10 @@ export function StudentAssessmentResultForm({}) {
       obtainable: "",
       subjectsOnClassRoomsId: null,
     },
+  });
+  const initForm = useAction(getStudentAssessmentFormAction, {
+    onSuccess(args) {},
+    onError(args) {},
   });
   const formOpened = form.watch("opened");
   useEffect(() => {
