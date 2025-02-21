@@ -15,7 +15,13 @@ import {
 import { SidebarTrigger } from "@acme/ui/sidebar";
 
 export default function ThirdTermHeader() {
-  const links = ["questions", "students", "results", "students-quran"];
+  const links = [
+    "questions",
+    "students",
+    "results",
+    "result-entry",
+    "students-quran",
+  ];
   //   const [current, setCurrent] = useState(null);
   const params = useParams();
   const path = usePathname();

@@ -63,4 +63,6 @@ export interface IOrderMeta {
   description;
   authorize: boolean;
 }
-export interface IOrderItemMeta {}
+export type AsyncFnType<T extends (...args: any) => any> = Awaited<
+  ReturnType<T>
+>;

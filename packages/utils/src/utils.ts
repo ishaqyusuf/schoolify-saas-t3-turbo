@@ -213,18 +213,18 @@ export const formatCurrency = new Intl.NumberFormat("en-US", {
 //   }
 //   return res;
 // }
-// export function generateRandomString(length = 15) {
-//   const charset =
-//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//   let randomString = "";
+export function generateRandomString(length = 15) {
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let randomString = "";
 
-//   for (let i = 0; i < length; i++) {
-//     const randomIndex = Math.floor(Math.random() * charset.length);
-//     randomString += charset.charAt(randomIndex);
-//   }
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    randomString += charset.charAt(randomIndex);
+  }
 
-//   return randomString;
-// }
+  return randomString;
+}
 // export function truthy<T>(condition, _true: T[] = [], _false: T[] = []): any {
 //   if (condition) return _true;
 //   return _false;

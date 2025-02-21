@@ -5,14 +5,27 @@ model ExampleClassRoom {
     classGroupCode String
     students       ExampleStudents[]
     subjects       ExampleSubjectsOnClassRooms[]
+
+    @@unique([classCode, classTitle, classGroupCode])
 }
 
 model ExampleSubject {
-    id            Int
+    id            Int                    @unique @default(autoincrement())
     title         String
     code          String                 @unique
     classSubjects ExampleClassSubjects[]
+
+    @@unique([title])
 }
+
+// model ExampleSubjects {
+//     id            Int                    @unique @default(autoincrement())
+//     title         String
+//     code          String                 @unique
+//     classSubjects ExampleClassSubjects[]
+
+//     @@unique([title])
+// }
 
 model ExampleClassSubjects {
     id                Int                           @unique @default(autoincrement())
@@ -21,15 +34,19 @@ model ExampleClassSubjects {
     classRooms        ExampleSubjectsOnClassRooms[]
     subject           ExampleSubject?               @relation(fields: [subjectCode], references: [code])
     assessmentResults ExampleStudentAssessment[]
+
+    @@unique([classGroupCode, subjectCode])
 }
 
 model ExampleSubjectsOnClassRooms {
     id                 Int                             @unique @default(autoincrement())
     classRoomSubjectId Int?
     classRoomId        Int?
-    classRom           ExampleClassRoom?               @relation(fields: [classRoomId], references: [id])
+    classRoom          ExampleClassRoom?               @relation(fields: [classRoomId], references: [id])
     classRoomSubject   ExampleClassSubjects?           @relation(fields: [classRoomSubjectId], references: [id])
     assessments        ExampleClassSubjectAssessment[]
+
+    @@unique([classRoomSubjectId, classRoomId])
 }
 
 model ExampleStudents {

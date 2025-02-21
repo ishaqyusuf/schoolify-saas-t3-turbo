@@ -1,6 +1,5 @@
 import { arToEn } from "~/app/[domain]/exam-result-2/helper";
 import { examStatus } from "./constants";
-import { studentsData, studentsDataUpdated } from "./students-data";
 import { getClassCode, getClassSubjectList } from "./utils";
 
 interface Class {
@@ -27,6 +26,7 @@ interface Student {
   payments: PaymentStatus[];
   gender: "M" | "F";
   examStatus;
+  text: string;
   quranClass?: QuranClass;
 }
 export const quranClasses = ["ق:تج", "ق:ح", "ق:أ", "ق:م", "ق:ج"] as const;
@@ -34,7 +34,6 @@ type QuranClass = NonNullable<typeof quranClasses>[number];
 let studentId = 0;
 let studentClassId = 0;
 export const composeStudent = (rd) => {
-  console.log({ rd });
   if (typeof rd !== "string") return [];
   studentId = 0;
   let cls: Class = null as any;
@@ -56,6 +55,7 @@ export const composeStudent = (rd) => {
         subs: [],
         subsCount: 0,
       };
+      if (!cls.subjects) return null;
       cls.subs = cls.subjects
         .map((a) => (a.subs.length ? a.subs : [null]))
         .flat() as any;
@@ -70,24 +70,25 @@ export const composeStudent = (rd) => {
     }
     const [name, ...params] = line?.includes(". ") ? line.split(". ") : [line];
     // console.log(name);
-    let trimmedName = name?.split(".")?.filter(Boolean).join(".");
+    const trimmedName = name?.split(".")?.filter(Boolean).join(".");
 
     if (!trimmedName) {
       if (cls?.students?.length) gender = "F";
       return null;
     }
-    const nameSplt = trimmedName
+    const [firstName, fathersName, otherName] = trimmedName
       ?.split(trimmedName?.includes(".") ? "." : " ")
       ?.filter(Boolean);
     // if (nameSplt?.length > 2 || nameSplt?.length == 1 || !nameSplt?.length)
     //   console.log(trimmedName);
     const student: Student = {
       gender,
+      text: line,
       studentClassId: (studentClassId += 1),
       studentId: (studentId += 1),
-      firstName: nameSplt?.[0] as any,
-      middleName: nameSplt?.[1],
-      lastName: nameSplt?.[2] as any,
+      firstName,
+      middleName: fathersName,
+      lastName: otherName,
       payments: [],
       examStatus: "",
     };

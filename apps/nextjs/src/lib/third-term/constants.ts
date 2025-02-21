@@ -16,6 +16,10 @@ export const subjectsByCode = {
   MUR: "المراجعة",
   KHT: "الخط",
   MAHF: "المحفوظة",
+  NAHW: "النحو",
+};
+export const classGroups: { [code in string]: ClassCodes[] } = {
+  tamheedi: ["tamheediA", "tamheediB", "tamheediC", "tamheediD"],
 };
 export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
   ibtidaai: ["QUR", "TAJW", "ADHKR", "AQ", "HADTH", "AR", "Alif"],
@@ -36,7 +40,7 @@ export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
     "ADHKR",
     "AQ",
   ],
-  idaadi: ["SEEROH", "AR", "HADTH"],
+  idaadi: ["SEEROH", "AR", "HADTH", "FIQH", "ADHKR", "MUTOON", "NAHW", "TAJW"],
   idaadi2: ["QUR", "HADTH", "FIQH", "MAHF", "ADHKR"],
 };
 
@@ -55,6 +59,15 @@ export const classByCodes = {
   ibtidaai2: "الثاني الإبتدائي",
   idaadi: "الأول الإعدادي",
   idaadi2: "الثاني الإعدادي",
+};
+export const arabicAbc = {
+  a: "ا",
+  b: "ب",
+  c: "ج",
+  d: "د",
+  e: "هـ",
+  f: "و",
+  g: "ز",
 };
 export const examStatus = {
   permitted: "مس",

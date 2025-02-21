@@ -106,11 +106,26 @@ export const buildQuestion = (data) => {
   }[] = [];
 
   spltd.map((ln) => {
+    const spls = ln?.split("~");
+    const styles = {};
+    const texts = [];
+    spls.map((s, i) => {
+      const [st, v] = s?.split("-");
+      if (v) {
+        styles[st] = v;
+      } else {
+        //
+        texts.push(s);
+      }
+    });
+    ln = texts[0];
+    if (!ln) return;
     const [index, body] = ln?.split("'");
     if (body) {
       const [q, ...optns] = body.split("`");
       lines.push({
         qNo: index,
+        styles,
         type: "question",
         text: transformText(q),
         options: optns?.map((o, i) => ({
@@ -126,6 +141,7 @@ export const buildQuestion = (data) => {
         text: centeredInstr,
         align: "center",
         type: "instruction",
+        styles,
       });
       return;
     }
@@ -133,6 +149,7 @@ export const buildQuestion = (data) => {
     if (grids.length > 1 || ln?.includes("،")) {
       lines.push({
         type: "grid",
+        styles,
         grids: grids.map((g, i) => {
           const [gInd, gTex] = g?.split(`،`);
           return {
@@ -143,18 +160,7 @@ export const buildQuestion = (data) => {
       });
       return;
     }
-    const spls = ln?.split("~");
-    const styles = {};
-    const texts = [];
-    spls.map((s, i) => {
-      const [st, v] = s?.split("-");
-      if (v) {
-        styles[st] = v;
-      } else {
-        //
-        texts.push(s);
-      }
-    });
+
     // if (texts?.length) {
     lines.push({
       type: "question",

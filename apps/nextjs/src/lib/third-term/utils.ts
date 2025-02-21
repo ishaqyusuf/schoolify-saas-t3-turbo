@@ -1,9 +1,5 @@
-import {
-  classByCodes,
-  ClassCodes,
-  classSubjectsByCode,
-  subjectsByCode,
-} from "./constants";
+import type { ClassCodes } from "./constants";
+import { classByCodes, classSubjectsByCode, subjectsByCode } from "./constants";
 
 export function getClassCode(name) {
   const res = Object.entries(classByCodes).find(
@@ -33,6 +29,5 @@ export function getClassSubjectList(classCode: ClassCodes) {
           : [],
     };
   });
-  //   console.log({ ls, classCode });
   return ls;
 }

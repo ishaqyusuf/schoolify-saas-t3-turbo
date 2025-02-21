@@ -17,6 +17,7 @@ export default [
       "@typescript-eslint/require-await": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
     },
   },
 ];
