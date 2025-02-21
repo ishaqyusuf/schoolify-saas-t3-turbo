@@ -31,6 +31,7 @@ import { toast } from "@acme/ui/toast";
 
 import { arabic } from "~/fonts";
 import { useSubjectAssessmentForm } from "~/hooks/use-subject-assessment-form";
+import { assessmentShortTitle } from "~/lib/third-term/constants";
 
 export default function ResultClassList({
   data,
@@ -56,7 +57,7 @@ export default function ResultClassList({
       <CollapsibleTrigger className="p-2">
         <div className="">{data.classTitle}</div>
       </CollapsibleTrigger>
-      <CollapsibleContent className="w-screen overflow-auto">
+      <CollapsibleContent className="w-screen overflow-auto sm:px-8">
         <Select defaultValue={subjectCode} onValueChange={setSubjectCode}>
           <SelectTrigger className="w-[280px]">
             <SelectValue placeholder="" />
@@ -69,15 +70,37 @@ export default function ResultClassList({
             ))}
           </SelectContent>
         </Select>
-        <Table dir="rtl">
+        <Table dir="rtl" className="table-fixed">
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead className="">Name</TableHead>
               {data.subjects?.map((s) => (
-                <TableHead colSpan={s.assessments?.length || 1} key={s.id}>
-                  <span>{s.classRoomSubject?.subject?.title}</span>
+                <TableHead
+                  className={cn(
+                    s.assessments?.length == 1 && "",
+                    s.assessments?.length == 2 && "",
+                    s.assessments?.length == 3 && "w-36 border",
+                  )}
+                  align="center"
+                  colSpan={s.assessments?.length || 1}
+                  key={s.id}
+                >
+                  <span className="text-center">
+                    {s.classRoomSubject?.subject?.title}
+                  </span>
                 </TableHead>
               ))}
+            </TableRow>
+            <TableRow>
+              <TableHead className="p-2"></TableHead>
+              {data.subjects
+                .map((s) => s.assessments || [{} as any])
+                .flat()
+                ?.map((s) => (
+                  <TableHead className="border p-2" key={s.id}>
+                    <div>{assessmentShortTitle(s.title)}</div>
+                  </TableHead>
+                ))}
             </TableRow>
           </TableHeader>
           <TableBody>

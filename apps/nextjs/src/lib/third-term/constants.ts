@@ -60,6 +60,18 @@ export const classByCodes = {
   idaadi: "الأول الإعدادي",
   idaadi2: "الثاني الإعدادي",
 };
+export const assessmentShortTitle = (title) => {
+  return (
+    {
+      الاختبار: "تب",
+      الامتحان: "تح",
+      القراءة: "ق",
+      الحضور: "حض",
+      الحفظ: "حف",
+      المراجعة: "م",
+    }[title] || title
+  );
+};
 export const arabicAbc = {
   a: "ا",
   b: "ب",

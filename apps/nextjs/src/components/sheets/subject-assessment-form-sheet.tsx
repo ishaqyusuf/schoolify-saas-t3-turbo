@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
 import {
   getSubjectAssessmentFormAction,
   SubjectAssessmentForm,
 } from "actions/get-subject-assessment-form";
 import { saveQuestionAction } from "actions/save-question-action";
+import { saveJobAssessmentAction } from "actions/save-subject-assessment";
+import { saveJobAssessmentSchema } from "actions/schema";
+import { useAction } from "next-safe-action/hooks";
 
 import { cn, Form, FormProvider, useForm } from "@acme/ui";
 import { Badge } from "@acme/ui/badge";
@@ -38,11 +43,13 @@ export function SubjectAssessmentFormSheet({}) {
   const ctx = useSubjectAssessmentForm();
   const [data, setData] = useState<SubjectAssessmentForm>();
   const form = useForm({
+    resolver: zodResolver(saveJobAssessmentSchema),
     defaultValues: {
       opened: false,
       id: null,
       title: "",
-      score: "",
+      obtainable: "",
+      subjectsOnClassRoomsId: null,
     },
   });
   const formOpened = form.watch("opened");
@@ -51,6 +58,10 @@ export function SubjectAssessmentFormSheet({}) {
       getSubjectAssessmentFormAction(+ctx.params.subjectId)
         .then((result) => {
           setData(result);
+          form.reset({
+            opened: false,
+            subjectsOnClassRoomsId: +ctx.params.subjectId,
+          });
         })
         .catch((e) => {
           toast.error("Something went wrong");
@@ -58,6 +69,31 @@ export function SubjectAssessmentFormSheet({}) {
         });
     }
   }, [ctx.isOpened, ctx.params.subjectId]);
+  const deleteAssessment = useAction(deleteSubjectAssessmentAction, {
+    onSuccess(args) {
+      setData((d) => {
+        const nd = { ...d };
+        nd.assessments = nd.assessments.filter((a) => a.id != args.input.id);
+      });
+      return nd as any;
+    },
+  });
+  const saveForm = useAction(saveJobAssessmentAction, {
+    onSuccess(args) {
+      setData((currnet) => {
+        const newData = { ...currnet };
+        newData.assessments.unshift(args.data as any);
+        return newData;
+      });
+      form.reset({
+        opened: false,
+      });
+      toast.success("Saved");
+    },
+    onError(args) {
+      toast.error("Error");
+    },
+  });
   if (!data) return null;
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
@@ -76,8 +112,23 @@ export function SubjectAssessmentFormSheet({}) {
             <TableBody>
               {data.assessments?.map((a) => (
                 <TableRow key={a.id}>
-                  <TableCell>{a.title}</TableCell>
+                  <TableCell>
+                    {`${a.id}. `}
+                    {a.title}
+                  </TableCell>
                   <TableCell>{a.obtainable}</TableCell>
+                  <TableCell>
+                    <Button
+                      size="sm"
+                      onClick={(s) => {
+                        deleteAssessment.execute({
+                          id: a.id,
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -88,8 +139,9 @@ export function SubjectAssessmentFormSheet({}) {
               form.reset({
                 opened: true,
                 id: null,
-                score: 0,
+                obtainable: "",
                 title: "",
+                subjectsOnClassRoomsId: +ctx.params.subjectId,
               });
             }}
             className=""
@@ -97,53 +149,46 @@ export function SubjectAssessmentFormSheet({}) {
             <Icons.add className="size-4" />
           </Button>
         </div>
-        {/* <FormProvider {...form}>
-          <div className="flex-1">
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect
-                control={form.control}
-                name="data.classCode"
-                options={classArray}
-                dir="rtl"
-                label={"Class"}
-              />
-              <FormSelect
-                control={form.control}
-                name="data.subjectCode"
-                options={subjectsArray}
-                dir="rtl"
-                label={"Subject"}
-              />
-            </div>
-            <Label>Question</Label>
-            <Textarea
-              className={cn("h-full", arabic.className, "px-4 pb-16 text-lg")}
-              dir="rtl"
-              {...form.register("data.raw")}
-            />
-          </div>
-        </FormProvider> */}
+
         {formOpened && (
           <SheetFooter className="flex flex-col">
             <FormProvider {...form}>
-              <div>
-                <FormInput
-                  dir="rtl"
-                  control={form.control}
-                  label="Assessment Title"
-                  name="title"
-                />
-              </div>
-              <div className="flex flex-wrap gap-4">
-                {data?.assessmentSuggestions?.map((a) => (
-                  <Badge key={a.title}>{a.title}</Badge>
-                ))}
-              </div>
+              <form onSubmit={form.handleSubmit(saveForm.execute)}>
+                <div className="flex flex-col gap-4">
+                  <FormInput
+                    dir="rtl"
+                    control={form.control}
+                    label="Assessment Title"
+                    name="title"
+                  />
+                  <FormInput
+                    dir="rtl"
+                    control={form.control}
+                    label="Obtainable"
+                    name="obtainable"
+                  />
+                  <div className="flex flex-wrap gap-4">
+                    {data?.assessmentSuggestions?.map((a) => (
+                      <Badge
+                        onClick={() => {
+                          form.setValue("obtainable", String(a.obtainable));
+                          form.setValue("title", a.title);
+                        }}
+                        key={a.title}
+                      >
+                        {a.title}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="flex-1"></div>
+                  <Button type="submit" className="">
+                    Save
+                  </Button>
+                </div>
+              </form>
             </FormProvider>
-            <div className="flex">
-              <div className="flex-1"></div>
-              <Button className="">Save</Button>
-            </div>
           </SheetFooter>
         )}
       </SheetContent>

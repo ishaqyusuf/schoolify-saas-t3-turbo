@@ -15,9 +15,22 @@ export async function loadResultEntriesAction(searchParams) {
             in: classCodes?.split(","),
           }
         : undefined,
+      //   subjects: subjectCodes? {
+      //   }:undefined
     },
     include: {
       subjects: {
+        where: subjectCodes
+          ? {
+              classRoomSubject: {
+                subject: {
+                  code: {
+                    in: subjectCodes?.split(","),
+                  },
+                },
+              },
+            }
+          : undefined,
         include: {
           classRoomSubject: {
             include: {
