@@ -30,6 +30,7 @@ import {
 import { toast } from "@acme/ui/toast";
 
 import { arabic } from "~/fonts";
+import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 import { useSubjectAssessmentForm } from "~/hooks/use-subject-assessment-form";
 import { assessmentShortTitle } from "~/lib/third-term/constants";
 
@@ -40,6 +41,7 @@ export default function ResultClassList({
 }) {
   const [subjectCode, setSubjectCode] = useState(null);
   const assmentForm = useSubjectAssessmentForm();
+  const resultForm = useStudentResultFormQuery();
   function openStudentSubjectForm(studentId) {
     const subject = data.subjects.find(
       (s) => s.classRoomSubject.subjectCode == subjectCode,
@@ -50,7 +52,9 @@ export default function ResultClassList({
     }
     if (!subject.assessments.length) {
       assmentForm.open(subject.id);
+      return;
     }
+    resultForm.open(studentId, subject.id);
   }
   return (
     <Collapsible dir="rtl" open className={cn(arabic.className)}>

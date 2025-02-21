@@ -11,11 +11,13 @@ import { saveJobAssessmentAction } from "actions/save-subject-assessment";
 import { saveJobAssessmentSchema } from "actions/schema";
 import { useAction } from "next-safe-action/hooks";
 
-import { FormProvider, useForm } from "@acme/ui";
+import { cn, Form, FormProvider, useForm } from "@acme/ui";
 import { Badge } from "@acme/ui/badge";
 import { Button } from "@acme/ui/button";
 import { Icons } from "@acme/ui/common/icons";
 import FormInput from "@acme/ui/controlled-inputs/form-input";
+import FormSelect from "@acme/ui/controlled-inputs/form-select";
+import { Label } from "@acme/ui/label";
 import {
   Sheet,
   SheetContent,
@@ -27,16 +29,17 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@acme/ui/table";
 import { toast } from "@acme/ui/toast";
 
-import { useSubjectAssessmentForm } from "~/hooks/use-subject-assessment-form";
+import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 
-export function SubjectAssessmentFormSheet({}) {
-  const ctx = useSubjectAssessmentForm();
+export function StudentAssessmentResultForm({}) {
+  const ctx = useStudentResultFormQuery();
   const [data, setData] = useState<SubjectAssessmentForm>();
   const form = useForm({
     resolver: zodResolver(saveJobAssessmentSchema),
@@ -51,18 +54,18 @@ export function SubjectAssessmentFormSheet({}) {
   const formOpened = form.watch("opened");
   useEffect(() => {
     if (ctx.isOpened) {
-      getSubjectAssessmentFormAction(+ctx.params.subjectId)
-        .then((result) => {
-          setData(result);
-          form.reset({
-            opened: false,
-            subjectsOnClassRoomsId: +ctx.params.subjectId,
-          });
-        })
-        .catch((e) => {
-          toast.error("Something went wrong");
-          setData(null);
-        });
+      // getSubjectAssessmentFormAction(+ctx.params.subjectId)
+      //   .then((result) => {
+      //     setData(result);
+      //     form.reset({
+      //       opened: false,
+      //       subjectsOnClassRoomsId: +ctx.params.subjectId,
+      //     });
+      //   })
+      //   .catch((e) => {
+      //     toast.error("Something went wrong");
+      //     setData(null);
+      //   });
     }
   }, [ctx.isOpened, ctx.params.subjectId]);
   const deleteAssessment = useAction(deleteSubjectAssessmentAction, {

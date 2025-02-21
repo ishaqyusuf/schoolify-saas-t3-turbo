@@ -4,6 +4,7 @@ import { prisma } from "@acme/db";
 
 import ResultClassList from "~/components/result-class-list";
 import { ResultEntrySideBar } from "~/components/result-entry-side-bar";
+import { StudentAssessmentResultForm } from "~/components/sheets/student-result-form";
 import { SubjectAssessmentFormSheet } from "~/components/sheets/subject-assessment-form-sheet";
 
 export default async function Page({ searchParams }) {
@@ -16,6 +17,7 @@ export default async function Page({ searchParams }) {
         <ResultClassList key={result.id} data={result} />
       ))}
       <SubjectAssessmentFormSheet />
+      <StudentAssessmentResultForm />
     </>
   );
 }
