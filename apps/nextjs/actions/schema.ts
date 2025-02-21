@@ -1,8 +1,13 @@
 import { z } from "zod";
 
+export const getClassRoomAssessmentFormSchema = z.object({
+  classRoomId: z.number(),
+});
 export const getStudentAssessmentFormSchema = z.object({
   //   id: z.number().nullable(),
-  id: z.number(),
+  classRoomId: z.number(),
+  studentId: z.number(),
+  subjectId: z.number(),
 });
 export const deleteSubjectAssessmentSchema = z.object({
   //   id: z.number().nullable(),

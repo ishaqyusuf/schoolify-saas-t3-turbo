@@ -54,7 +54,7 @@ export default function ResultClassList({
       assmentForm.open(subject.id);
       return;
     }
-    resultForm.open(studentId, subject.id);
+    resultForm.open(studentId, subject.id, subject.classRoomId);
   }
   return (
     <Collapsible dir="rtl" open className={cn(arabic.className)}>

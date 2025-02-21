@@ -39,14 +39,14 @@ model ExampleClassSubjects {
 }
 
 model ExampleSubjectsOnClassRooms {
-    id                              Int                               @unique @default(autoincrement())
-    classRoomSubjectId              Int?
-    classRoomId                     Int?
-    classRoom                       ExampleClassRoom?                 @relation(fields: [classRoomId], references: [id])
-    classRoomSubject                ExampleClassSubjects?             @relation(fields: [classRoomSubjectId], references: [id])
-    assessments                     ExampleClassSubjectAssessment[]
-    ExampleStudentSubjectAssessment ExampleStudentSubjectAssessment[]
-    ExampleStudentAssessment        ExampleStudentAssessment[]
+    id                        Int                               @unique @default(autoincrement())
+    classRoomSubjectId        Int?
+    classRoomId               Int?
+    classRoom                 ExampleClassRoom?                 @relation(fields: [classRoomId], references: [id])
+    classRoomSubject          ExampleClassSubjects?             @relation(fields: [classRoomSubjectId], references: [id])
+    assessments               ExampleClassSubjectAssessment[]
+    studentSubjectAssessments ExampleStudentSubjectAssessment[]
+    studentAssessment         ExampleStudentAssessment[]
 
     @@unique([classRoomSubjectId, classRoomId])
 }
@@ -65,6 +65,7 @@ model ExampleStudents {
     assessmentResults   ExampleStudentAssessment[]
     performanceRemark   ExampleRemarkOnStudentPerformance? @relation(fields: [performanceRemarkId], references: [id])
     payments            ExampleStudentPayments[]
+    subjectAssessments  ExampleStudentSubjectAssessment[]
 
     @@unique([firstName, fathersName, otherName, classCode])
 }
@@ -85,6 +86,8 @@ model ExampleStudentSubjectAssessment {
     assessments            ExampleStudentAssessment[]
     obtained               Float?
     percentageScore        Float?
+    student                ExampleStudents?             @relation(fields: [studentId], references: [id])
+    studentId              Int?
 }
 
 model ExampleStudentAssessment {

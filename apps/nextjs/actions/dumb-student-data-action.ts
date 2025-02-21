@@ -7,7 +7,6 @@ import { generateRandomString } from "@acme/utils";
 import type { ClassCodes } from "~/lib/third-term/constants";
 import { composeStudent } from "~/lib/third-term/compose-students";
 import {
-  classByCodes,
   classSubjectsByCode,
   subjectsByCode,
 } from "~/lib/third-term/constants";

@@ -6,16 +6,18 @@ export const useStudentResultFormQuery = () => {
     resultForm: parseAsBoolean,
     subjectId: parseAsString,
     studentId: parseAsString,
+    classroomId: parseAsString,
   });
   const isOpened = !!params.resultForm;
   return {
     isOpened,
     params,
-    open(studentId, subjectId) {
+    open(studentId, subjectId, classroomId) {
       setParams({
         resultForm: true,
         studentId,
         subjectId,
+        classroomId,
       });
     },
     close() {

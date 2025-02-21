@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
+import { getClassRoomAssessmentForm } from "actions/get-classroom-assessment-form";
 import { getStudentAssessmentFormAction } from "actions/get-student-assement-form";
 import {
   getSubjectAssessmentFormAction,
@@ -12,12 +13,12 @@ import { saveJobAssessmentAction } from "actions/save-subject-assessment";
 import { saveJobAssessmentSchema } from "actions/schema";
 import { useAction } from "next-safe-action/hooks";
 
-import { cn, Form, FormProvider, useForm } from "@acme/ui";
-import { Badge } from "@acme/ui/badge";
-import { Button } from "@acme/ui/button";
-import { Icons } from "@acme/ui/common/icons";
-import FormInput from "@acme/ui/controlled-inputs/form-input";
-import FormSelect from "@acme/ui/controlled-inputs/form-select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@acme/ui/dropdown-menu";
 import { Label } from "@acme/ui/label";
 import {
   Sheet,
@@ -41,160 +42,101 @@ import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query
 
 export function StudentAssessmentResultForm({}) {
   const ctx = useStudentResultFormQuery();
-  const [data, setData] = useState<SubjectAssessmentForm>();
-  const form = useForm({
-    resolver: zodResolver(saveJobAssessmentSchema),
-    defaultValues: {
-      opened: false,
-      id: null,
-      title: "",
-      obtainable: "",
-      subjectsOnClassRoomsId: null,
+  const [data, setData] = useState<(typeof initForm)["result"]["data"]>();
+  const [classRoomdata, setClassroomData] =
+    useState<(typeof initClassRoom)["result"]["data"]>();
+  const initClassRoom = useAction(getClassRoomAssessmentForm, {
+    onSuccess(args) {
+      console.log(args.data);
+      setClassroomData(args.data);
     },
-  });
-  const initForm = useAction(getStudentAssessmentFormAction, {
-    onSuccess(args) {},
     onError(args) {},
   });
-  const formOpened = form.watch("opened");
+  const initForm = useAction(getStudentAssessmentFormAction, {
+    onSuccess(args) {
+      console.log(args.data);
+      setData(args.data);
+    },
+    onError(args) {},
+  });
   useEffect(() => {
     if (ctx.isOpened) {
-      // getSubjectAssessmentFormAction(+ctx.params.subjectId)
-      //   .then((result) => {
-      //     setData(result);
-      //     form.reset({
-      //       opened: false,
-      //       subjectsOnClassRoomsId: +ctx.params.subjectId,
-      //     });
-      //   })
-      //   .catch((e) => {
-      //     toast.error("Something went wrong");
-      //     setData(null);
-      //   });
+      initClassRoom.execute({
+        classRoomId: +ctx.params.classroomId,
+      });
+      initForm.execute({
+        studentId: +ctx.params.studentId,
+        subjectId: +ctx.params.subjectId,
+        classRoomId: +ctx.params.classroomId,
+      });
     }
-  }, [ctx.isOpened, ctx.params.subjectId]);
-  const deleteAssessment = useAction(deleteSubjectAssessmentAction, {
-    onSuccess(args) {
-      setData((d) => {
-        const nd = { ...d };
-        nd.assessments = nd.assessments.filter((a) => a.id != args.input.id);
+  }, [
+    ctx.isOpened,
+    ctx.params.subjectId,
+    ctx.params.studentId,
+    ctx.params.classroomId,
+  ]);
+  useEffect(() => {
+    if (ctx.isOpened && ctx.params.classroomId) {
+      initClassRoom.execute({
+        classRoomId: +ctx.params.classroomId,
       });
-      return nd as any;
-    },
-  });
-  const saveForm = useAction(saveJobAssessmentAction, {
-    onSuccess(args) {
-      setData((currnet) => {
-        const newData = { ...currnet };
-        newData.assessments.unshift(args.data as any);
-        return newData;
-      });
-      form.reset({
-        opened: false,
-      });
-      toast.success("Saved");
-    },
-    onError(args) {
-      toast.error("Error");
-    },
-  });
+    }
+  }, [ctx.params.classroomId, ctx.isOpened]);
   if (!data) return null;
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
       <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-2/3 sm:p-4 lg:w-2/3">
         <SheetHeader>
-          <SheetTitle>{data.classRoom.classTitle}</SheetTitle>
+          <SheetTitle>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                {`${data.firstName} ${data.fathersName} ${data.otherName || ""}`}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-h-[40vh]">
+                {classRoomdata?.classRoom?.students?.map((student) => (
+                  <DropdownMenuItem key={student.id}>
+                    {`${student.firstName} ${student.fathersName} ${student.otherName || ""}`}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-auto">
-          <Table dir="rtl">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Score</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.assessments?.map((a) => (
-                <TableRow key={a.id}>
-                  <TableCell>
-                    {`${a.id}. `}
-                    {a.title}
-                  </TableCell>
-                  <TableCell>{a.obtainable}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      onClick={(s) => {
-                        deleteAssessment.execute({
-                          id: a.id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-            {/* <TableFooter></TableFooter> */}
-          </Table>
-          <Button
-            onClick={(e) => {
-              form.reset({
-                opened: true,
-                id: null,
-                obtainable: "",
-                title: "",
-                subjectsOnClassRoomsId: +ctx.params.subjectId,
-              });
-            }}
-            className=""
-          >
-            <Icons.add className="size-4" />
-          </Button>
-        </div>
-
-        {formOpened && (
-          <SheetFooter className="flex flex-col">
-            <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(saveForm.execute)}>
-                <div className="flex flex-col gap-4">
-                  <FormInput
-                    dir="rtl"
-                    control={form.control}
-                    label="Assessment Title"
-                    name="title"
-                  />
-                  <FormInput
-                    dir="rtl"
-                    control={form.control}
-                    label="Obtainable"
-                    name="obtainable"
-                  />
-                  <div className="flex flex-wrap gap-4">
-                    {data?.assessmentSuggestions?.map((a) => (
-                      <Badge
-                        onClick={() => {
-                          form.setValue("obtainable", String(a.obtainable));
-                          form.setValue("title", a.title);
-                        }}
-                        key={a.title}
-                      >
+          {classRoomdata?.groupedAssessments?.map((gr, i) => (
+            <Table key={i} dir="rtl">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Subject</TableHead>
+                  {gr.assessmentNames
+                    .filter((a) => a.obtainable)
+                    ?.map((a, ai) => (
+                      <TableHead key={ai}>
                         {a.title}
-                      </Badge>
+                        <span>{`(${a.obtainable})`}</span>
+                      </TableHead>
                     ))}
-                  </div>
-                </div>
-                <div className="flex">
-                  <div className="flex-1"></div>
-                  <Button type="submit" className="">
-                    Save
-                  </Button>
-                </div>
-              </form>
-            </FormProvider>
-          </SheetFooter>
-        )}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {gr?.subjects?.map((subject, index) => (
+                  <TableRow key={subject.id}>
+                    <TableCell>
+                      {`${index}. `}
+                      {subject?.classRoomSubject?.subject?.title}
+                    </TableCell>
+                    {subject.assessments
+                      ?.filter((a) => a.obtainable)
+                      .map((a, ai) => <TableCell key={ai}></TableCell>)}
+                    <TableCell></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              {/* <TableFooter></TableFooter> */}
+            </Table>
+          ))}
+        </div>
       </SheetContent>
     </Sheet>
   );
