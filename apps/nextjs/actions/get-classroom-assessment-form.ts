@@ -53,7 +53,7 @@ export const _getClassRoomAssessmentFormAction = async ({
   _data.subjects.map((subject) => {
     const matchedSubjectIndex = groupedAssessments.findIndex((a) =>
       subject.assessments.every((aa) =>
-        a.assessmentNames.some((_a) => aa.title?.localeCompare(_a.title)),
+        a.assessmentNames.some((_a) => aa.title?.localeCompare(_a.title) === 0),
       ),
     );
     if (matchedSubjectIndex > -1)
