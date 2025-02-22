@@ -3,12 +3,7 @@
 import type { ClassRoomAssessmentForm } from "actions/get-classroom-assessment-form";
 import type { GetStudentAssessmentForm } from "actions/get-student-assement-form";
 import { useEffect, useState, useTransition } from "react";
-import { getClassRoomAssessmentFormAction } from "actions/get-classroom-assessment-form";
-import {
-  _getStudentAssessmentFormAction,
-  getStudentAssessmentFormAction,
-} from "actions/get-student-assement-form";
-import { useAction } from "next-safe-action/hooks";
+import { _getStudentAssessmentFormAction } from "actions/get-student-assement-form";
 
 import {
   DropdownMenu,
@@ -28,6 +23,7 @@ import {
 
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 import { AssessmentInput } from "./assessment-input";
+import { StudentNameControl } from "./student-name-control";
 
 export function StudentAssessmentResultForm() {
   const ctx = useStudentResultFormQuery();
@@ -70,27 +66,7 @@ export function StudentAssessmentResultForm() {
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
       <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-2/3 sm:p-4 lg:w-2/3">
         <SheetHeader>
-          <SheetTitle>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                {`${data.firstName} ${data.fathersName} ${data.otherName || ""}`}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="max-h-[40vh]">
-                {classRoomdata?.classRoom?.students?.map((student) => (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      ctx.setParams({
-                        studentId: String(student.id),
-                      });
-                    }}
-                    key={student.id}
-                  >
-                    {`${student.firstName} ${student.fathersName} ${student.otherName || ""}`}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SheetTitle>
+          <StudentNameControl data={data} classRoomData={classRoomdata} />
         </SheetHeader>
         {isPending ? (
           <></>
