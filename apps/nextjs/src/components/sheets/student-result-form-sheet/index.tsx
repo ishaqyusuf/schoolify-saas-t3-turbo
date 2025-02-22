@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { getClassRoomAssessmentFormAction } from "actions/get-classroom-assessment-form";
 import {
   _getStudentAssessmentFormAction,
@@ -52,25 +52,25 @@ export function StudentAssessmentResultForm({}) {
         }
       }
     },
-    onError(args) {},
+    onError(args) {
+      //
+    },
   });
+  const [isPending, startTransition] = useTransition();
   useEffect(() => {
     if (ctx.isOpened) {
-      console.log("REFRESHING>>>");
-      _getStudentAssessmentFormAction({
-        parsedInput: {
-          studentId: +ctx.params.studentId,
-          subjectId: +ctx.params.subjectId,
-          classRoomId: !classRoomdata ? +ctx.params.classroomId : null,
-        },
-      }).then((result) => {
-        console.log({
-          result,
+      //  const exec = async () => {
+
+      startTransition(async () => {
+        const result = await _getStudentAssessmentFormAction({
+          parsedInput: {
+            studentId: +ctx.params.studentId,
+            subjectId: +ctx.params.subjectId,
+            classRoomId: !classRoomdata ? +ctx.params.classroomId : null,
+          },
         });
         setData(result);
       });
-      // initForm.execute({
-      // });
     }
   }, [
     ctx.isOpened,
@@ -112,47 +112,51 @@ export function StudentAssessmentResultForm({}) {
             </DropdownMenu>
           </SheetTitle>
         </SheetHeader>
-        <div className="flex-1 overflow-auto">
-          {classRoomdata?.groupedAssessments?.map((gr, i) => (
-            <Table key={i} dir="rtl">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Subject</TableHead>
-                  {gr.assessmentNames
-                    .filter((a) => a.obtainable)
-                    ?.map((a, ai) => (
-                      <TableHead key={ai}>
-                        {a.title}
-                        <span>{`(${a.obtainable})`}</span>
-                      </TableHead>
-                    ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {gr?.subjects?.map((subject, index) => (
-                  <TableRow key={subject.id}>
-                    <TableCell>
-                      {`${index}. `}
-                      {subject?.classRoomSubject?.subject?.title}
-                    </TableCell>
-                    {subject.assessments
-                      ?.filter((a) => a.obtainable)
-                      .map((a, ai) => (
-                        <TableCell key={ai}>
-                          <AssessmentInput
-                            subjectAssessment={a}
-                            studentData={data}
-                          />
-                        </TableCell>
+        {isPending ? (
+          <></>
+        ) : (
+          <div className="flex-1 overflow-auto">
+            {classRoomdata?.groupedAssessments?.map((gr, i) => (
+              <Table key={i} dir="rtl">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Subject</TableHead>
+                    {gr.assessmentNames
+                      .filter((a) => a.obtainable)
+                      ?.map((a, ai) => (
+                        <TableHead key={ai}>
+                          {a.title}
+                          <span>{`(${a.obtainable})`}</span>
+                        </TableHead>
                       ))}
-                    <TableCell></TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-              {/* <TableFooter></TableFooter> */}
-            </Table>
-          ))}
-        </div>
+                </TableHeader>
+                <TableBody>
+                  {gr?.subjects?.map((subject, index) => (
+                    <TableRow key={subject.id}>
+                      <TableCell>
+                        {`${index}. `}
+                        {subject?.classRoomSubject?.subject?.title}
+                      </TableCell>
+                      {subject.assessments
+                        ?.filter((a) => a.obtainable)
+                        .map((a, ai) => (
+                          <TableCell key={ai}>
+                            <AssessmentInput
+                              subjectAssessment={a}
+                              studentData={data}
+                            />
+                          </TableCell>
+                        ))}
+                      <TableCell></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                {/* <TableFooter></TableFooter> */}
+              </Table>
+            ))}
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

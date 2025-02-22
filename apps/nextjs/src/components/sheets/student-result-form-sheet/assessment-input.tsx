@@ -1,6 +1,8 @@
 import type { ClassRoomAssessmentForm } from "actions/get-classroom-assessment-form";
 import type { GetStudentAssessmentForm } from "actions/get-student-assement-form";
 import { useEffect, useState } from "react";
+import { saveJobAssessmentAction } from "actions/save-student-assessment-action";
+import { useAction } from "next-safe-action/hooks";
 
 import { Input } from "@acme/ui/input";
 import { generateRandomString, useDebounce } from "@acme/utils";
@@ -19,10 +21,21 @@ export function AssessmentInput({ studentData, subjectAssessment }: Props) {
   const [typing, setTyping] = useState(null);
   const [debounceValue] = useDebounce(typing, 300, {});
 
+  const saveResult = useAction(saveJobAssessmentAction, {
+    onSuccess(res) {
+      //
+      console.log("UPDATED");
+      console.log(res.data);
+    },
+  });
   useEffect(() => {
     if (debounceValue) {
-      //
-      console.log({ value });
+      saveResult.execute({
+        obtained: value,
+        studentId: studentData?.id,
+        assessmentId: subjectAssessment.id,
+        subjectOnClassRoomId: subjectAssessment.subjectsOnClassRoomsId,
+      });
     }
   }, [debounceValue]);
 
@@ -31,12 +44,11 @@ export function AssessmentInput({ studentData, subjectAssessment }: Props) {
       type="number"
       max={100}
       onInput={(e) => {
-        console.log("INPUT");
         setTyping(generateRandomString(2));
       }}
       min={0}
       className=""
-      defaultValue={value}
+      value={value}
       onChange={(e) => {
         setValue(+e.target.value);
       }}

@@ -82,12 +82,14 @@ model ExampleClassSubjectAssessment {
 model ExampleStudentSubjectAssessment {
     id                     Int                          @unique @default(autoincrement())
     subjectsOnClassRoomsId Int?
+    studentId              Int?
     subjectsOnClassRoom    ExampleSubjectsOnClassRooms? @relation(fields: [subjectsOnClassRoomsId], references: [id])
     assessments            ExampleStudentAssessment[]
     obtained               Float?
     percentageScore        Float?
     student                ExampleStudents?             @relation(fields: [studentId], references: [id])
-    studentId              Int?
+
+    @@unique([studentId, subjectsOnClassRoomsId])
 }
 
 model ExampleStudentAssessment {
@@ -104,6 +106,8 @@ model ExampleStudentAssessment {
     classSubjectAssessment          ExampleClassSubjectAssessment?   @relation(fields: [classSubjectAssessmentId], references: [id])
     RemarkOnAssessment              ExampleRemarkOnAssessment?       @relation(fields: [remarkOnAssementId], references: [id])
     ExampleStudentSubjectAssessment ExampleStudentSubjectAssessment? @relation(fields: [studentSubjectAssessmentId], references: [id])
+
+    @@unique([studentId, studentSubjectAssessmentId, classSubjectAssessmentId])
 }
 
 model ExampleRemarkOnSubjectAssessment {
