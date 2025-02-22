@@ -1,16 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
-import { getClassRoomAssessmentForm } from "actions/get-classroom-assessment-form";
-import { getStudentAssessmentFormAction } from "actions/get-student-assement-form";
+import { getClassRoomAssessmentFormAction } from "actions/get-classroom-assessment-form";
 import {
-  getSubjectAssessmentFormAction,
-  SubjectAssessmentForm,
-} from "actions/get-subject-assessment-form";
-import { saveJobAssessmentAction } from "actions/save-subject-assessment";
-import { saveJobAssessmentSchema } from "actions/schema";
+  _getStudentAssessmentFormAction,
+  getStudentAssessmentFormAction,
+} from "actions/get-student-assement-form";
 import { useAction } from "next-safe-action/hooks";
 
 import {
@@ -19,33 +14,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@acme/ui/dropdown-menu";
-import { Label } from "@acme/ui/label";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@acme/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@acme/ui/sheet";
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@acme/ui/table";
-import { toast } from "@acme/ui/toast";
 
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
+import { AssessmentInput } from "./assessment-input";
 
 export function StudentAssessmentResultForm({}) {
   const ctx = useStudentResultFormQuery();
   const [data, setData] = useState<(typeof initForm)["result"]["data"]>();
   const [classRoomdata, setClassroomData] =
     useState<(typeof initClassRoom)["result"]["data"]>();
-  const initClassRoom = useAction(getClassRoomAssessmentForm, {
+  const initClassRoom = useAction(getClassRoomAssessmentFormAction, {
     onSuccess(args) {
       console.log(args.data);
       setClassroomData(args.data);
@@ -56,19 +43,34 @@ export function StudentAssessmentResultForm({}) {
     onSuccess(args) {
       console.log(args.data);
       setData(args.data);
+      if (!classRoomdata) {
+        if (args.data.classRoomData) {
+          console.log("SETTING CLASSROOM");
+          setClassroomData(args.data.classRoomData);
+        } else {
+          console.log("CLASSROOM DATA NOT LOADED");
+        }
+      }
     },
     onError(args) {},
   });
   useEffect(() => {
     if (ctx.isOpened) {
-      initClassRoom.execute({
-        classRoomId: +ctx.params.classroomId,
+      console.log("REFRESHING>>>");
+      _getStudentAssessmentFormAction({
+        parsedInput: {
+          studentId: +ctx.params.studentId,
+          subjectId: +ctx.params.subjectId,
+          classRoomId: !classRoomdata ? +ctx.params.classroomId : null,
+        },
+      }).then((result) => {
+        console.log({
+          result,
+        });
+        setData(result);
       });
-      initForm.execute({
-        studentId: +ctx.params.studentId,
-        subjectId: +ctx.params.subjectId,
-        classRoomId: +ctx.params.classroomId,
-      });
+      // initForm.execute({
+      // });
     }
   }, [
     ctx.isOpened,
@@ -95,7 +97,14 @@ export function StudentAssessmentResultForm({}) {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[40vh]">
                 {classRoomdata?.classRoom?.students?.map((student) => (
-                  <DropdownMenuItem key={student.id}>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      ctx.setParams({
+                        studentId: String(student.id),
+                      });
+                    }}
+                    key={student.id}
+                  >
                     {`${student.firstName} ${student.fathersName} ${student.otherName || ""}`}
                   </DropdownMenuItem>
                 ))}
@@ -128,7 +137,14 @@ export function StudentAssessmentResultForm({}) {
                     </TableCell>
                     {subject.assessments
                       ?.filter((a) => a.obtainable)
-                      .map((a, ai) => <TableCell key={ai}></TableCell>)}
+                      .map((a, ai) => (
+                        <TableCell key={ai}>
+                          <AssessmentInput
+                            subjectAssessment={a}
+                            studentData={data}
+                          />
+                        </TableCell>
+                      ))}
                     <TableCell></TableCell>
                   </TableRow>
                 ))}
