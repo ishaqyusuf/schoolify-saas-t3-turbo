@@ -2,7 +2,6 @@
 
 import type { ResultEntries } from "actions/load-result-entries";
 import { Fragment, useEffect, useState } from "react";
-import { loadResultEntriesAction } from "actions/load-result-entries";
 
 import { cn } from "@acme/ui";
 import {
@@ -11,13 +10,6 @@ import {
   CollapsibleTrigger,
 } from "@acme/ui/collapsible";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@acme/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -25,12 +17,10 @@ import {
   TableHeader,
   TableRow,
 } from "@acme/ui/table";
-import { toast } from "@acme/ui/toast";
 
 import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { arabic } from "~/fonts";
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
-import { assessmentShortTitle } from "~/lib/third-term/constants";
 
 export default function ResultClassList({
   data,
@@ -57,8 +47,14 @@ export default function ResultClassList({
     // }
     resultForm.open(studentId, data.id);
   }
+  const [opened, openChanged] = useState(false);
   return (
-    <Collapsible dir="rtl" open className={cn(arabic.className)}>
+    <Collapsible
+      dir="rtl"
+      open={opened}
+      onOpenChange={openChanged}
+      className={cn(arabic.className, "border-b")}
+    >
       <CollapsibleTrigger className="p-2">
         <div className="">{data.classTitle}</div>
       </CollapsibleTrigger>
@@ -106,7 +102,7 @@ export default function ResultClassList({
                     .map((s) => s.assessments || [{} as any])
                     .flat()
                     ?.map((s) => (
-                      <TableHead className="border p-2" key={s.id}>
+                      <TableHead className="border bg-white p-2" key={s.id}>
                         {/* <div>{assessmentShortTitle(s.title)}</div> */}
                         <div className="line-clamp-1">{s.title}</div>
                       </TableHead>
