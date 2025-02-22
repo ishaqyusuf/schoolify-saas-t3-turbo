@@ -1,7 +1,7 @@
 "use client";
 
 import type { ResultEntries } from "actions/load-result-entries";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { loadResultEntriesAction } from "actions/load-result-entries";
 
 import { cn } from "@acme/ui";
@@ -27,9 +27,9 @@ import {
 } from "@acme/ui/table";
 import { toast } from "@acme/ui/toast";
 
+import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { arabic } from "~/fonts";
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
-import { useSubjectAssessmentForm } from "~/hooks/use-subject-assessment-form";
 import { assessmentShortTitle } from "~/lib/third-term/constants";
 
 export default function ResultClassList({
@@ -38,8 +38,11 @@ export default function ResultClassList({
   data: ResultEntries[number];
 }) {
   const [subjectCode, setSubjectCode] = useState(null);
-  const assmentForm = useSubjectAssessmentForm();
   const resultForm = useStudentResultFormQuery();
+  useEffect(() => {
+    console.log({ data });
+  }, []);
+
   function openStudentSubjectForm(studentId) {
     // const subject = data.subjects.find(
     //   (s) => s.classRoomSubject.subjectCode == subjectCode,
@@ -122,6 +125,24 @@ export default function ResultClassList({
                   <TableCell className="sticky left-0 z-10 whitespace-nowrap bg-white">
                     {`${s.firstName} ${s.fathersName} ${s.otherName || ""}`}
                   </TableCell>
+                  {data.subjects
+                    // .map((s) => s.assessments || [{} as any])
+                    // .flat()
+                    ?.map((sub) => (
+                      <Fragment key={sub.id}>
+                        {(
+                          (sub.assessments.length
+                            ? sub.assessments
+                            : ([{}] as any)) as typeof sub.assessments
+                        ).map((res) => (
+                          <ResultCell
+                            assessment={res}
+                            student={s}
+                            key={res.id}
+                          ></ResultCell>
+                        ))}
+                      </Fragment>
+                    ))}
                 </TableRow>
               ))}
             </TableBody>
@@ -129,5 +150,20 @@ export default function ResultClassList({
         </div>
       </CollapsibleContent>
     </Collapsible>
+  );
+}
+interface ResultCellProps {
+  student: ResultEntries[number]["students"][number];
+  assessment: ResultEntries[number]["subjects"][number]["assessments"][number];
+}
+function ResultCell({ student, assessment }: ResultCellProps) {
+  const result = student?.assessmentResults?.find(
+    (a) => assessment.id == a.classSubjectAssessmentId,
+  );
+  if (result) console.log({ result });
+  return (
+    <TableCell className="p-1">
+      {result?.obtained ? enToAr(result?.obtained) : "-"}
+    </TableCell>
   );
 }

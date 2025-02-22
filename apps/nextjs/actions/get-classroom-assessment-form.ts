@@ -12,8 +12,6 @@ export type ClassRoomAssessmentForm = AsyncFnType<
 export const _getClassRoomAssessmentFormAction = async ({
   parsedInput: data,
 }) => {
-  console.log({ data });
-
   const _data = await prisma.exampleClassRoom.findFirst({
     where: {
       id: data.classRoomId,
