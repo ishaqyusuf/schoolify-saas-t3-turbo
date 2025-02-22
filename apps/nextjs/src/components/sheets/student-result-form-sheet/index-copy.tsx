@@ -1,7 +1,5 @@
 "use client";
 
-import type { ClassRoomAssessmentForm } from "actions/get-classroom-assessment-form";
-import type { GetStudentAssessmentForm } from "actions/get-student-assement-form";
 import { useEffect, useState, useTransition } from "react";
 import { getClassRoomAssessmentFormAction } from "actions/get-classroom-assessment-form";
 import {
@@ -31,9 +29,33 @@ import { AssessmentInput } from "./assessment-input";
 
 export function StudentAssessmentResultForm({}) {
   const ctx = useStudentResultFormQuery();
-  const [data, setData] = useState<GetStudentAssessmentForm>();
-  const [classRoomdata, setClassroomData] = useState<ClassRoomAssessmentForm>();
-
+  const [data, setData] = useState<(typeof initForm)["result"]["data"]>();
+  const [classRoomdata, setClassroomData] =
+    useState<(typeof initClassRoom)["result"]["data"]>();
+  const initClassRoom = useAction(getClassRoomAssessmentFormAction, {
+    onSuccess(args) {
+      console.log(args.data);
+      setClassroomData(args.data);
+    },
+    onError(args) {},
+  });
+  const initForm = useAction(getStudentAssessmentFormAction, {
+    onSuccess(args) {
+      console.log(args.data);
+      setData(args.data);
+      if (!classRoomdata) {
+        if (args.data.classRoomData) {
+          console.log("SETTING CLASSROOM");
+          setClassroomData(args.data.classRoomData);
+        } else {
+          console.log("CLASSROOM DATA NOT LOADED");
+        }
+      }
+    },
+    onError(args) {
+      //
+    },
+  });
   const [isPending, startTransition] = useTransition();
   useEffect(() => {
     if (ctx.isOpened) {
@@ -42,14 +64,18 @@ export function StudentAssessmentResultForm({}) {
           parsedInput: {
             studentId: +ctx.params.studentId,
             subjectId: +ctx.params.subjectId,
-            classRoomId: +ctx.params.classroomId,
+            classRoomId: !classRoomdata ? +ctx.params.classroomId : null,
           },
         });
         setData(result);
-        setClassroomData(result.classRoomData);
       });
     }
-  }, [ctx.isOpened]);
+  }, [
+    ctx.isOpened,
+    ctx.params.subjectId,
+    ctx.params.studentId,
+    ctx.params.classroomId,
+  ]);
   // useEffect(() => {
   //   if (ctx.isOpened && ctx.params.classroomId) {
   //     initClassRoom.execute({
