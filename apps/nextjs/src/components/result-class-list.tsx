@@ -76,7 +76,7 @@ export default function ResultClassList({
             <Table dir="rtl" className="">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="sw-48 sticky right-0 z-10 bg-white">
+                  <TableHead className="sw-48 sticky right-0 z-10 border bg-white">
                     Name
                   </TableHead>
                   {data.subjects?.map((s) => (
@@ -97,7 +97,7 @@ export default function ResultClassList({
                   ))}
                 </TableRow>
                 <TableRow>
-                  <TableHead className="p-2"></TableHead>
+                  <TableHead className="border bg-white p-2"></TableHead>
                   {data.subjects
                     .map((s) => s.assessments || [{} as any])
                     .flat()

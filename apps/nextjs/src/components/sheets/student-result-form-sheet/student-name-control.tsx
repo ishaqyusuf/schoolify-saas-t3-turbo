@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@acme/ui/dropdown-menu";
+import { ScrollArea } from "@acme/ui/scroll-area";
 import { SheetTitle } from "@acme/ui/sheet";
 
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
@@ -72,19 +73,22 @@ export function StudentNameControl({
         >
           <Icons.chevronRight className="size-4" />
         </Button>
-        <DropdownMenuContent className="max-h-[40vh]">
-          {classRoomData?.classRoom?.students?.map((student) => (
-            <DropdownMenuItem
-              onClick={() => {
-                ctx.setParams({
-                  studentId: String(student.id),
-                });
-              }}
-              key={student.id}
-            >
-              {`${student.firstName} ${student.fathersName} ${student.otherName || ""}`}
-            </DropdownMenuItem>
-          ))}
+        <DropdownMenuContent className="">
+          <ScrollArea className="h-[40vh]">
+            {classRoomData?.classRoom?.students?.map((student) => (
+              <DropdownMenuItem
+                dir="rtl"
+                onClick={() => {
+                  ctx.setParams({
+                    studentId: String(student.id),
+                  });
+                }}
+                key={student.id}
+              >
+                {`${student.firstName} ${student.fathersName} ${student.otherName || ""}`}
+              </DropdownMenuItem>
+            ))}
+          </ScrollArea>
         </DropdownMenuContent>
       </DropdownMenu>
     </SheetTitle>
