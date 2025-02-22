@@ -43,35 +43,35 @@ export function StudentNameControl({
   return (
     <SheetTitle>
       <DropdownMenu>
+        <Button
+          onClick={() => {
+            ctx.setParams({
+              studentId: String(control.prevId),
+            });
+          }}
+          disabled={!control.prevId}
+          size="sm"
+          variant="ghost"
+        >
+          <Icons.chevronLeft className="size-4" />
+        </Button>
         <DropdownMenuTrigger className="inline-flex items-center gap-4">
-          <Button
-            onClick={() => {
-              ctx.setParams({
-                studentId: String(control.prevId),
-              });
-            }}
-            disabled={!control.prevId}
-            size="sm"
-            variant="ghost"
-          >
-            <Icons.chevronLeft className="size-4" />
-          </Button>
           <span>
             {`${data.firstName} ${data.fathersName} ${data.otherName || ""}`}
           </span>
-          <Button
-            onClick={() => {
-              ctx.setParams({
-                studentId: String(control.nextId),
-              });
-            }}
-            disabled={!control.nextId}
-            size="sm"
-            variant="ghost"
-          >
-            <Icons.chevronRight className="size-4" />
-          </Button>
         </DropdownMenuTrigger>
+        <Button
+          onClick={() => {
+            ctx.setParams({
+              studentId: String(control.nextId),
+            });
+          }}
+          disabled={!control.nextId}
+          size="sm"
+          variant="ghost"
+        >
+          <Icons.chevronRight className="size-4" />
+        </Button>
         <DropdownMenuContent className="max-h-[40vh]">
           {classRoomData?.classRoom?.students?.map((student) => (
             <DropdownMenuItem

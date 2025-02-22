@@ -47,20 +47,18 @@ export function StudentAssessmentResultForm() {
     }
   }, [isOpened, studentId, subjectId, classroomId, data]);
   useEffect(() => {
-    if (data) {
-      startTransition(async () => {
-        const result = await _getStudentAssessmentFormAction({
-          parsedInput: {
-            studentId: +studentId,
-            subjectId: +subjectId,
-            // classRoomId: +classroomId,
-          },
-        });
-        setData(result);
-        // setClassroomData(result.classRoomData);
+    startTransition(async () => {
+      const result = await _getStudentAssessmentFormAction({
+        parsedInput: {
+          studentId: +studentId,
+          subjectId: +subjectId,
+          // classRoomId: +classroomId,
+        },
       });
-    }
-  }, [studentId, data, subjectId]);
+      setData(result);
+      // setClassroomData(result.classRoomData);
+    });
+  }, [studentId, subjectId]);
   if (!data) return null;
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
