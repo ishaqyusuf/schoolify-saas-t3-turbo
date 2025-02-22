@@ -74,9 +74,14 @@ export const _getClassRoomAssessmentFormAction = async ({
       classCode: true,
       id: true,
       classTitle: true,
+      students: {
+        take: 1,
+        select: {
+          id: true,
+        },
+      },
     },
   });
-  console.log({ groupedAssessments });
 
   return {
     classRoom: _data,

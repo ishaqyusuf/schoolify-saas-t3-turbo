@@ -1,10 +1,8 @@
 "use client";
 
+import type { ResultEntries } from "actions/load-result-entries";
 import { useState } from "react";
-import {
-  loadResultEntriesAction,
-  ResultEntries,
-} from "actions/load-result-entries";
+import { loadResultEntriesAction } from "actions/load-result-entries";
 
 import { cn } from "@acme/ui";
 import {
@@ -43,18 +41,18 @@ export default function ResultClassList({
   const assmentForm = useSubjectAssessmentForm();
   const resultForm = useStudentResultFormQuery();
   function openStudentSubjectForm(studentId) {
-    const subject = data.subjects.find(
-      (s) => s.classRoomSubject.subjectCode == subjectCode,
-    );
-    if (!subject) {
-      toast.error("select subject");
-      return;
-    }
-    if (!subject.assessments.length) {
-      assmentForm.open(subject.id);
-      return;
-    }
-    resultForm.open(studentId, subject.id, subject.classRoomId);
+    // const subject = data.subjects.find(
+    //   (s) => s.classRoomSubject.subjectCode == subjectCode,
+    // );
+    // if (!subject) {
+    //   toast.error("select subject");
+    //   return;
+    // }
+    // if (!subject.assessments.length) {
+    //   assmentForm.open(subject.id);
+    //   return;
+    // }
+    resultForm.open(studentId, data.id);
   }
   return (
     <Collapsible dir="rtl" open className={cn(arabic.className)}>

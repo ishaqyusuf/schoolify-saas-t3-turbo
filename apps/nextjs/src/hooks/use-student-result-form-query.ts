@@ -13,11 +13,11 @@ export const useStudentResultFormQuery = () => {
     isOpened,
     ...params,
     setParams,
-    open(studentId, subjectId, classroomId) {
+    open(studentId, classroomId) {
       setParams({
         resultForm: true,
         studentId,
-        subjectId,
+        // subjectId,
         classroomId,
       });
     },

@@ -32,7 +32,7 @@ export function StudentAssessmentResultForm() {
   const ctx = useStudentResultFormQuery();
   const [data, setData] = useState<GetStudentAssessmentForm>();
   const [classRoomdata, setClassroomData] = useState<ClassRoomAssessmentForm>();
-  const { isOpened, studentId, subjectId, classroomId } = ctx;
+  const { isOpened, studentId, classroomId } = ctx;
   const [isPending, startTransition] = useTransition();
   const [triggerFreshDataToken, setTriggerFreshDataToken] = useState(null);
   useEffect(() => {
@@ -41,39 +41,50 @@ export function StudentAssessmentResultForm() {
         const result = await _getStudentAssessmentFormAction({
           parsedInput: {
             studentId: +studentId,
-            subjectId: +subjectId,
             classRoomId: +classroomId,
           },
         });
+        console.log(result);
+
         setData(result);
         setClassroomData(result.classRoomData);
         setTriggerFreshDataToken(null);
       });
     }
-  }, [isOpened, triggerFreshDataToken, studentId, subjectId, classroomId]);
+  }, [isOpened, triggerFreshDataToken, studentId, classroomId]);
   useEffect(() => {
-    if (isOpened) setTriggerFreshDataToken(generateRandomString());
+    if (isOpened)
+      setTimeout(() => {
+        setTriggerFreshDataToken(generateRandomString());
+      }, 100);
   }, [isOpened]);
   useEffect(() => {
-    startTransition(async () => {
-      const result = await _getStudentAssessmentFormAction({
-        parsedInput: {
-          studentId: +studentId,
-          subjectId: +subjectId,
-          // classRoomId: +classroomId,
-        },
+    if (!triggerFreshDataToken)
+      startTransition(async () => {
+        const result = await _getStudentAssessmentFormAction({
+          parsedInput: {
+            studentId: +studentId,
+            // subjectId: +subjectId,
+            // classRoomId: +classroomId,
+          },
+        });
+        setData(result);
+        // setClassroomData(result.classRoomData);
       });
-      setData(result);
-      // setClassroomData(result.classRoomData);
-    });
-  }, [studentId, subjectId]);
+  }, [studentId, triggerFreshDataToken]);
   if (!data) return null;
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
       <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-2/3 sm:p-4 lg:w-2/3">
         <SheetHeader className="border-b">
           <StudentNameControl data={data} classRoomData={classRoomdata} />
-          <ClassRoomControl data={data} classRoomData={classRoomdata} />
+          <ClassRoomControl
+            onChange={(e) => {
+              setTriggerFreshDataToken(generateRandomString());
+            }}
+            data={data}
+            classRoomData={classRoomdata}
+          />
         </SheetHeader>
         {isPending ? (
           <></>

@@ -17,17 +17,31 @@ import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query
 export function ClassRoomControl({
   data,
   classRoomData,
+  onChange,
 }: {
   data: GetStudentAssessmentForm;
   classRoomData: ClassRoomAssessmentForm;
+  onChange;
 }) {
   const ctx = useStudentResultFormQuery();
   const control = useMemo(() => {
     const ls = classRoomData?.classList || [];
     const currentIndex = ls?.findIndex((a) => a.id == +ctx.classroomId);
     const resp = {
-      nextId: currentIndex == -1 ? null : ls[currentIndex + 1]?.id,
-      prevId: currentIndex == -1 ? null : ls[currentIndex - 1]?.id,
+      nextId:
+        currentIndex == -1
+          ? null
+          : {
+              classRoomId: ls[currentIndex + 1]?.id,
+              studentId: ls[currentIndex + 1]?.students?.[0]?.id,
+            },
+      prevId:
+        currentIndex == -1
+          ? null
+          : {
+              classRoomId: ls[currentIndex - 1]?.id,
+              studentId: ls[currentIndex - 1]?.students?.[0]?.id,
+            },
       classRoomTitle: ls[currentIndex]?.classTitle,
       classRoomList: ls,
     };
@@ -38,9 +52,13 @@ export function ClassRoomControl({
       <DropdownMenu>
         <Button
           onClick={() => {
-            ctx.setParams({
-              studentId: String(control.prevId),
-            });
+            onChange();
+            ctx.setParams(
+              {
+                ...(control.prevId || ({} as any)),
+              },
+              {},
+            );
           }}
           disabled={!control.prevId}
           size="sm"
@@ -53,9 +71,13 @@ export function ClassRoomControl({
         </DropdownMenuTrigger>
         <Button
           onClick={() => {
-            ctx.setParams({
-              studentId: String(control.nextId),
-            });
+            onChange();
+            ctx.setParams(
+              {
+                ...(control.nextId || ({} as any)),
+              },
+              {},
+            );
           }}
           disabled={!control.nextId}
           size="sm"
@@ -67,9 +89,14 @@ export function ClassRoomControl({
           {control.classRoomList?.map((classRoom) => (
             <DropdownMenuItem
               onClick={() => {
-                ctx.setParams({
-                  classroomId: String(classRoom.id),
-                });
+                onChange();
+                ctx.setParams(
+                  {
+                    classroomId: String(classRoom.id),
+                    studentId: String(classRoom.students?.[0]?.id),
+                  },
+                  {},
+                );
               }}
               key={classRoom.id}
             >
