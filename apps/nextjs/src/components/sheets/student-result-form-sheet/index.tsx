@@ -29,34 +29,42 @@ import {
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 import { AssessmentInput } from "./assessment-input";
 
-export function StudentAssessmentResultForm({}) {
+export function StudentAssessmentResultForm() {
   const ctx = useStudentResultFormQuery();
   const [data, setData] = useState<GetStudentAssessmentForm>();
   const [classRoomdata, setClassroomData] = useState<ClassRoomAssessmentForm>();
-
+  const { isOpened, studentId, subjectId, classroomId } = ctx;
   const [isPending, startTransition] = useTransition();
   useEffect(() => {
-    if (ctx.isOpened) {
+    if (isOpened && !data) {
       startTransition(async () => {
         const result = await _getStudentAssessmentFormAction({
           parsedInput: {
-            studentId: +ctx.params.studentId,
-            subjectId: +ctx.params.subjectId,
-            classRoomId: +ctx.params.classroomId,
+            studentId: +studentId,
+            subjectId: +subjectId,
+            classRoomId: +classroomId,
           },
         });
         setData(result);
         setClassroomData(result.classRoomData);
       });
     }
-  }, [ctx.isOpened]);
-  // useEffect(() => {
-  //   if (ctx.isOpened && ctx.params.classroomId) {
-  //     initClassRoom.execute({
-  //       classRoomId: +ctx.params.classroomId,
-  //     });
-  //   }
-  // }, [ctx.params.classroomId, ctx.isOpened]);
+  }, [isOpened, studentId, subjectId, classroomId, data]);
+  useEffect(() => {
+    if (data) {
+      startTransition(async () => {
+        const result = await _getStudentAssessmentFormAction({
+          parsedInput: {
+            studentId: +studentId,
+            subjectId: +subjectId,
+            // classRoomId: +classroomId,
+          },
+        });
+        setData(result);
+        // setClassroomData(result.classRoomData);
+      });
+    }
+  }, [studentId, data, subjectId]);
   if (!data) return null;
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>

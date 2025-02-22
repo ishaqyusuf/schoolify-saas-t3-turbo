@@ -11,7 +11,7 @@ export const useStudentResultFormQuery = () => {
   const isOpened = !!params.resultForm;
   return {
     isOpened,
-    params,
+    ...params,
     setParams,
     open(studentId, subjectId, classroomId) {
       setParams({
