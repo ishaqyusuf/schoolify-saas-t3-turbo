@@ -10,11 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@acme/ui/dropdown-menu";
-import { SheetTitle } from "@acme/ui/sheet";
+import { SheetDescription } from "@acme/ui/sheet";
 
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 
-export function StudentNameControl({
+export function ClassRoomControl({
   data,
   classRoomData,
 }: {
@@ -23,25 +23,18 @@ export function StudentNameControl({
 }) {
   const ctx = useStudentResultFormQuery();
   const control = useMemo(() => {
-    const currentIndex = classRoomData?.classRoom?.students?.findIndex(
-      (a) => a.id == +ctx.studentId,
-    );
-
+    const ls = classRoomData?.classList || [];
+    const currentIndex = ls?.findIndex((a) => a.id == +ctx.classroomId);
     const resp = {
-      nextId:
-        currentIndex == -1
-          ? null
-          : classRoomData?.classRoom?.students[currentIndex + 1]?.id,
-      prevId:
-        currentIndex == -1
-          ? null
-          : classRoomData?.classRoom?.students[currentIndex - 1]?.id,
+      nextId: currentIndex == -1 ? null : ls[currentIndex + 1]?.id,
+      prevId: currentIndex == -1 ? null : ls[currentIndex - 1]?.id,
+      classRoomTitle: ls[currentIndex]?.classTitle,
+      classRoomList: ls,
     };
-    console.log(resp);
     return resp;
-  }, [ctx.studentId, classRoomData]);
+  }, [ctx.classroomId, classRoomData]);
   return (
-    <SheetTitle>
+    <SheetDescription>
       <DropdownMenu>
         <Button
           onClick={() => {
@@ -56,9 +49,7 @@ export function StudentNameControl({
           <Icons.chevronLeft className="size-4" />
         </Button>
         <DropdownMenuTrigger className="inline-flex items-center gap-4">
-          <span>
-            {`${data.firstName} ${data.fathersName} ${data.otherName || ""}`}
-          </span>
+          <span>{`${control.classRoomTitle}`}</span>
         </DropdownMenuTrigger>
         <Button
           onClick={() => {
@@ -73,20 +64,20 @@ export function StudentNameControl({
           <Icons.chevronRight className="size-4" />
         </Button>
         <DropdownMenuContent className="max-h-[40vh]">
-          {classRoomData?.classRoom?.students?.map((student) => (
+          {control.classRoomList?.map((classRoom) => (
             <DropdownMenuItem
               onClick={() => {
                 ctx.setParams({
-                  studentId: String(student.id),
+                  classroomId: String(classRoom.id),
                 });
               }}
-              key={student.id}
+              key={classRoom.id}
             >
-              {`${student.firstName} ${student.fathersName} ${student.otherName || ""}`}
+              {`${classRoom?.classTitle}`}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    </SheetTitle>
+    </SheetDescription>
   );
 }

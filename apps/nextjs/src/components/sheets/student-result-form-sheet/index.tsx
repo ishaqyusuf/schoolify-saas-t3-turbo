@@ -20,9 +20,12 @@ import {
   TableHeader,
   TableRow,
 } from "@acme/ui/table";
+import { generateRandomString } from "@acme/utils";
 
+import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 import { AssessmentInput } from "./assessment-input";
+import { ClassRoomControl } from "./sheet-description-classroom";
 import { StudentNameControl } from "./student-name-control";
 
 export function StudentAssessmentResultForm() {
@@ -31,8 +34,9 @@ export function StudentAssessmentResultForm() {
   const [classRoomdata, setClassroomData] = useState<ClassRoomAssessmentForm>();
   const { isOpened, studentId, subjectId, classroomId } = ctx;
   const [isPending, startTransition] = useTransition();
+  const [triggerFreshDataToken, setTriggerFreshDataToken] = useState(null);
   useEffect(() => {
-    if (isOpened && !data) {
+    if (isOpened && triggerFreshDataToken) {
       startTransition(async () => {
         const result = await _getStudentAssessmentFormAction({
           parsedInput: {
@@ -43,9 +47,13 @@ export function StudentAssessmentResultForm() {
         });
         setData(result);
         setClassroomData(result.classRoomData);
+        setTriggerFreshDataToken(null);
       });
     }
-  }, [isOpened, studentId, subjectId, classroomId, data]);
+  }, [isOpened, triggerFreshDataToken, studentId, subjectId, classroomId]);
+  useEffect(() => {
+    if (isOpened) setTriggerFreshDataToken(generateRandomString());
+  }, [isOpened]);
   useEffect(() => {
     startTransition(async () => {
       const result = await _getStudentAssessmentFormAction({
@@ -63,8 +71,9 @@ export function StudentAssessmentResultForm() {
   return (
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
       <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-2/3 sm:p-4 lg:w-2/3">
-        <SheetHeader>
+        <SheetHeader className="border-b">
           <StudentNameControl data={data} classRoomData={classRoomdata} />
+          <ClassRoomControl data={data} classRoomData={classRoomdata} />
         </SheetHeader>
         {isPending ? (
           <></>
@@ -80,7 +89,7 @@ export function StudentAssessmentResultForm() {
                       ?.map((a, ai) => (
                         <TableHead key={ai}>
                           {a.title}
-                          <span>{`(${a.obtainable})`}</span>
+                          <span>{`(${enToAr(a.obtainable)})`}</span>
                         </TableHead>
                       ))}
                   </TableRow>
@@ -89,7 +98,7 @@ export function StudentAssessmentResultForm() {
                   {gr?.subjects?.map((subject, index) => (
                     <TableRow key={subject.id}>
                       <TableCell>
-                        {`${index}. `}
+                        {`${enToAr(index + 1)}. `}
                         {subject?.classRoomSubject?.subject?.title}
                       </TableCell>
                       {subject.assessments
