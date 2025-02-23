@@ -23,8 +23,6 @@ export function AssessmentInput({ studentData, subjectAssessment }: Props) {
 
   const saveResult = useAction(saveSubjectAssessmentAction, {
     onSuccess(res) {
-      //
-      console.log("UPDATED");
       console.log(res.data);
     },
   });
