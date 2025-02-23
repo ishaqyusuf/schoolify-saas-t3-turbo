@@ -3,6 +3,14 @@ import { z } from "zod";
 export const getClassRoomAssessmentFormSchema = z.object({
   classRoomId: z.number(),
 });
+export const addStudentSchema = z.object({
+  //   id: z.number().nullable(),
+  classRoomId: z.number(),
+  firstName: z.string().min(1),
+  fathersName: z.string().min(1),
+  otherName: z.string().optional(),
+  classCode: z.string(),
+});
 export const getStudentAssessmentFormSchema = z.object({
   //   id: z.number().nullable(),
   classRoomId: z.number(),

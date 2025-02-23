@@ -1,6 +1,6 @@
 export const configs = {
   schoolName: `مدرسـة دار الحديث لتحفيـظ القرآن والسنـة`,
-  comment: ":الملاحظة",
+  comment: "الملاحظة",
   teacherSignature: `توقيع المدرس`,
   directorSignature: `توقيع المدير`,
   hifz: "الحفظ",

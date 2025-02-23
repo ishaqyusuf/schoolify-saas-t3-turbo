@@ -2,7 +2,9 @@
 
 import { prisma } from "@acme/db";
 
-import { AsyncFnType } from "~/lib/types";
+import type { AsyncFnType } from "~/lib/types";
+import { configs } from "~/app/exam-result/data";
+import { groupClassAssessment } from "~/lib/third-term/group-class-assessment";
 
 export type ResultEntries = AsyncFnType<typeof loadResultEntriesAction>;
 export async function loadResultEntriesAction(searchParams) {
@@ -37,15 +39,55 @@ export async function loadResultEntriesAction(searchParams) {
               subject: true,
             },
           },
-          assessments: true,
+          assessments: {
+            include: {
+              subjectsOnClassRoom: true,
+            },
+          },
         },
       },
       students: {
         include: {
-          assessmentResults: true,
+          assessmentResults: {
+            include: {
+              classSubjectAssessment: true,
+            },
+          },
         },
       },
     },
   });
-  return list;
+  return list.map((ls) => {
+    return {
+      ...ls,
+      assessmentGroup: groupClassAssessment(ls.subjects),
+      students: ls.students.map((std) => {
+        return {
+          ...std,
+          fullName: [std.firstName, std.fathersName, std.otherName]
+            .filter(Boolean)
+            .join(" "),
+          pritName: getDisplayName(
+            std.firstName,
+            std.fathersName,
+            std.otherName,
+          ),
+        };
+      }),
+    };
+  });
+}
+function getDisplayName(firstName, surname, lastName) {
+  return [firstName, surname, lastName]?.filter(Boolean).map((name) => {
+    return name
+      ?.split(" ")
+      ?.filter(Boolean)
+      .map((s) => s.trim())
+      .map((s) => {
+        const cal = configs.caligraphs[s] || configs.caligraphs2[s];
+        // if (!cal) unformattedNames[s] = s;
+        return cal || s;
+      })
+      .join(" ");
+  });
 }

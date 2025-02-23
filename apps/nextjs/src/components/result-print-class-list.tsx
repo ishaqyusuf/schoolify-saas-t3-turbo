@@ -28,35 +28,28 @@ import {
 import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { arabic } from "~/fonts";
 import { useManageClassroomSubjectQuery } from "~/hooks/use-manage-classroom-subject-query";
+import { useResultPrintQuery } from "~/hooks/use-result-print-query";
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
+import { composeClassResult } from "~/lib/third-term/compose-student-result";
+import { ResultPrintStudent } from "./result-print-student";
 
-export default function ResultClassList({
+export default function ResultPrintClassList({
   data,
 }: {
   data: ResultEntries[number];
 }) {
   const [subjectCode, setSubjectCode] = useState(null);
-  const resultForm = useStudentResultFormQuery();
-  useEffect(() => {
-    console.log({ data });
-  }, []);
+  const printQuery = useResultPrintQuery();
 
-  function openStudentSubjectForm(studentId) {
-    // const subject = data.subjects.find(
-    //   (s) => s.classRoomSubject.subjectCode == subjectCode,
-    // );
-    // if (!subject) {
-    //   toast.error("select subject");
-    //   return;
-    // }
-    // if (!subject.assessments.length) {
-    //   assmentForm.open(subject.id);
-    //   return;
-    // }
-    resultForm.open(studentId, data.id);
-  }
+  const composedData = composeClassResult(data);
+
   const [opened, openChanged] = useState(false);
   const manageClassroom = useManageClassroomSubjectQuery();
+  if (
+    printQuery.classCodes &&
+    !printQuery.classCodes?.split(",").includes(data.classCode)
+  )
+    return null;
   return (
     <Collapsible
       dir="rtl"
@@ -64,101 +57,25 @@ export default function ResultClassList({
       onOpenChange={openChanged}
       className={cn(arabic.className, "border-b")}
     >
-      <div className="flex w-full gap-2">
+      <div className="flex w-full gap-2 print:hidden">
         <CollapsibleTrigger className="flex w-full p-2">
           <div className="">{data.classTitle}</div>
         </CollapsibleTrigger>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="px-4">
-            <Icons.menu className="size-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() => {
-                manageClassroom.open(data.id);
-              }}
-            >
-              Edit Subjects
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
-      <CollapsibleContent className="w-screen overflow-auto sm:px-8">
-        <div className="w-screen overflow-hidden">
-          <div className="relative w-full overflow-x-scroll">
-            <Table dir="rtl" className="">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="sw-48 sticky right-0 z-10 border bg-white">
-                    Name
-                  </TableHead>
-                  {data.subjects?.map((s) => (
-                    <TableHead
-                      className={cn(
-                        s.assessments?.length == 1 && "",
-                        s.assessments?.length == 2 && "",
-                        s.assessments?.length == 3 && "w-36 border",
-                      )}
-                      align="center"
-                      colSpan={s.assessments?.length || 1}
-                      key={s.id}
-                    >
-                      <span className="text-center">
-                        {s.classRoomSubject?.subject?.title}
-                      </span>
-                    </TableHead>
-                  ))}
-                </TableRow>
-                <TableRow>
-                  <TableHead className="border bg-white p-2"></TableHead>
-                  {data.subjects
-                    .map((s) => s.assessments || [{} as any])
-                    .flat()
-                    ?.map((s) => (
-                      <TableHead className="border bg-white p-2" key={s.id}>
-                        {/* <div>{assessmentShortTitle(s.title)}</div> */}
-                        <div className="line-clamp-1">{s.title}</div>
-                      </TableHead>
-                    ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.students?.map((s, i) => (
-                  <TableRow
-                    onClick={() => {
-                      openStudentSubjectForm(s.id);
-                    }}
-                    className={cn(i % 2 == 0 && "bg-muted")}
-                    key={s.id}
-                  >
-                    <TableCell className="sticky right-0 z-10 whitespace-nowrap bg-white p-2">
-                      {`${enToAr(i + 1)}. `}
-                      {`${s.firstName} ${s.fathersName} ${s.otherName || ""}`}
-                    </TableCell>
-                    {data.subjects
-                      // .map((s) => s.assessments || [{} as any])
-                      // .flat()
-                      ?.map((sub) => (
-                        <Fragment key={sub.id}>
-                          {(
-                            (sub.assessments.length
-                              ? sub.assessments
-                              : ([{}] as any)) as typeof sub.assessments
-                          ).map((res) => (
-                            <ResultCell
-                              assessment={res}
-                              student={s}
-                              key={res.id}
-                            ></ResultCell>
-                          ))}
-                        </Fragment>
-                      ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+      <CollapsibleContent className="overflow-auto sm:px-8">
+        {composedData.students.map((student, index) => (
+          <ResultPrintStudent
+            student={student}
+            data={data}
+            key={student.id}
+            className={cn(
+              index > 1 && index % 2 == 1 && "print:break-after-pages",
+
+              index % 2 == 1 &&
+                "border-t-2 border-dashed border-muted-foreground",
+            )}
+          />
+        ))}
       </CollapsibleContent>
     </Collapsible>
   );

@@ -3,6 +3,7 @@
 import { prisma } from "@acme/db";
 
 import type { AsyncFnType } from "~/lib/types";
+import { groupClassAssessment } from "~/lib/third-term/group-class-assessment";
 import { actionClient } from "./safe-action";
 import { getClassRoomAssessmentFormSchema } from "./schema";
 
@@ -44,28 +45,7 @@ export const _getClassRoomAssessmentFormAction = async ({
       },
     },
   });
-  const groupedAssessments: {
-    assessmentNames: { title; obtainable }[];
-    subjects: (typeof _data)["subjects"];
-  }[] = [];
-  _data.subjects.map((subject) => {
-    const matchedSubjectIndex = groupedAssessments.findIndex((a) =>
-      subject.assessments.every((aa) =>
-        a.assessmentNames.some((_a) => aa.title?.localeCompare(_a.title) === 0),
-      ),
-    );
-    if (matchedSubjectIndex > -1)
-      groupedAssessments[matchedSubjectIndex].subjects.push(subject);
-    else {
-      groupedAssessments.push({
-        assessmentNames: subject.assessments.map((a) => ({
-          obtainable: a.obtainable,
-          title: a.title,
-        })),
-        subjects: [subject],
-      });
-    }
-  });
+
   const classList = await prisma.exampleClassRoom.findMany({
     where: {},
     select: {
@@ -84,7 +64,7 @@ export const _getClassRoomAssessmentFormAction = async ({
   return {
     classRoom: _data,
     classList,
-    groupedAssessments,
+    groupedAssessments: groupClassAssessment(_data.subjects as any),
   };
 };
 export const getClassRoomAssessmentFormAction = actionClient

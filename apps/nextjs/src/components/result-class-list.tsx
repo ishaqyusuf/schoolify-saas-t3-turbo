@@ -29,6 +29,7 @@ import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { arabic } from "~/fonts";
 import { useManageClassroomSubjectQuery } from "~/hooks/use-manage-classroom-subject-query";
 import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
+import { useStudentFormQuery } from "~/hooks/user-student-form-query";
 
 export default function ResultClassList({
   data,
@@ -37,9 +38,6 @@ export default function ResultClassList({
 }) {
   const [subjectCode, setSubjectCode] = useState(null);
   const resultForm = useStudentResultFormQuery();
-  useEffect(() => {
-    console.log({ data });
-  }, []);
 
   function openStudentSubjectForm(studentId) {
     // const subject = data.subjects.find(
@@ -56,6 +54,7 @@ export default function ResultClassList({
     resultForm.open(studentId, data.id);
   }
   const [opened, openChanged] = useState(false);
+  const studentForm = useStudentFormQuery();
   const manageClassroom = useManageClassroomSubjectQuery();
   return (
     <Collapsible
@@ -79,6 +78,13 @@ export default function ResultClassList({
               }}
             >
               Edit Subjects
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                studentForm.open(data.id, data.classCode);
+              }}
+            >
+              Add Student
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

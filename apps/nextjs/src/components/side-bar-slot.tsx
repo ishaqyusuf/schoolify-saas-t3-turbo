@@ -5,7 +5,7 @@ import Portal from "@acme/ui/common/portal";
 export default function SideBarSlot({ children }) {
   return (
     <Portal nodeId={"sideBarSlot"} waitSec={0}>
-      {children}
+      <div className="print:hidden">{children}</div>
     </Portal>
   );
 }

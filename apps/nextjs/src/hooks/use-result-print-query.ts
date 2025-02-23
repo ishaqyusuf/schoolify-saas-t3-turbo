@@ -9,6 +9,7 @@ export const useResultPrintQuery = () => {
     sort: parseAsString,
   });
   return {
+    ...query,
     query,
     setQuery,
   };
