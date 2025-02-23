@@ -2,17 +2,17 @@ import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs";
 
 export const useManageClassroomSubjectQuery = () => {
   const [params, setParams] = useQueryStates({
-    subjectAssessmentForm: parseAsBoolean,
-    subjectId: parseAsString,
+    manageClassRoom: parseAsBoolean,
+    manageClassroomId: parseAsString,
   });
-  const isOpened = !!params.subjectAssessmentForm;
+  const isOpened = !!params.manageClassRoom;
   return {
     isOpened,
-    params,
-    open(subjectId) {
+    ...params,
+    open(manageClassroomId) {
       setParams({
-        subjectAssessmentForm: true,
-        subjectId,
+        manageClassRoom: true,
+        manageClassroomId,
       });
     },
     close() {

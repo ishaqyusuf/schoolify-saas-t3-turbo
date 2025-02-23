@@ -2,7 +2,7 @@
 
 import { prisma } from "@acme/db";
 
-import { AsyncFnType } from "~/lib/types";
+import type { AsyncFnType } from "~/lib/types";
 
 export type ClassRoomSubjectManager = AsyncFnType<
   typeof getClassroomSubjectManager
@@ -14,9 +14,17 @@ export async function getClassroomSubjectManager(classRoomId) {
       subjects: {
         include: {
           assessments: true,
+          classRoomSubject: {
+            include: {
+              subject: true,
+            },
+          },
         },
       },
     },
   });
-  return classroom;
+  const assessments = await prisma.exampleClassSubjectAssessment.findMany({
+    distinct: "title",
+  });
+  return { classroom, assessments };
 }

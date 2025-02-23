@@ -5,7 +5,7 @@ import { prisma, Prisma } from "@acme/db";
 import { actionClient } from "./safe-action";
 import { saveStudentAssessmentSchema } from "./schema";
 
-export const saveJobAssessmentAction = actionClient
+export const saveSubjectAssessmentAction = actionClient
   .schema(saveStudentAssessmentSchema)
   .action(async ({ parsedInput: data }) => {
     return prisma.$transaction((async (tx: typeof prisma) => {

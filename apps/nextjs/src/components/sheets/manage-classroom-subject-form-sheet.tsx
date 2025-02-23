@@ -1,19 +1,34 @@
 "use client";
 
+import type { ClassRoomSubjectManager } from "actions/get-classroom-subject-manager";
 import type { SubjectAssessmentForm } from "actions/get-subject-assessment-form";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addSubjectAction } from "actions/add-subject-action";
 import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
+import { getClassroomSubjectManager } from "actions/get-classroom-subject-manager";
 import { getSubjectAssessmentFormAction } from "actions/get-subject-assessment-form";
-import { saveJobAssessmentAction } from "actions/save-subject-assessment";
+import { saveSubjectAssessmentAction } from "actions/save-subject-assessment";
 import { saveJobAssessmentSchema } from "actions/schema";
 import { useAction } from "next-safe-action/hooks";
 
 import { FormProvider, useForm } from "@acme/ui";
 import { Badge } from "@acme/ui/badge";
 import { Button } from "@acme/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@acme/ui/collapsible";
 import { Icons } from "@acme/ui/common/icons";
 import FormInput from "@acme/ui/controlled-inputs/form-input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@acme/ui/dropdown-menu";
+import { ScrollArea } from "@acme/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -32,55 +47,64 @@ import {
 import { toast } from "@acme/ui/toast";
 
 import { useManageClassroomSubjectQuery } from "~/hooks/use-manage-classroom-subject-query";
+import { subjectsByCode } from "~/lib/third-term/constants";
 
 export function ManageClassroomSubjectFormSheet() {
   const ctx = useManageClassroomSubjectQuery();
-  const [data, setData] = useState<SubjectAssessmentForm>();
-  const form = useForm({
-    resolver: zodResolver(saveJobAssessmentSchema),
-    defaultValues: {
-      opened: false,
-      id: null,
-      title: "",
-      obtainable: "",
-      subjectsOnClassRoomsId: null,
-    },
-  });
-  const formOpened = form.watch("opened");
+  const [data, setData] = useState<ClassRoomSubjectManager>();
+
   useEffect(() => {
     if (ctx.isOpened) {
-      getSubjectAssessmentFormAction(+ctx.params.subjectId)
+      getClassroomSubjectManager(+ctx.manageClassroomId)
         .then((result) => {
           setData(result);
-          form.reset({
-            opened: false,
-            subjectsOnClassRoomsId: +ctx.params.subjectId,
-          });
         })
         .catch((e) => {
-          toast.error("Something went wrong");
           setData(null);
         });
     }
-  }, [ctx.isOpened, ctx.params.subjectId]);
-  const deleteAssessment = useAction(deleteSubjectAssessmentAction, {
+  }, [ctx.isOpened, ctx.manageClassroomId]);
+  const subjects = Object.entries(subjectsByCode).map(([value, label]) => ({
+    label,
+    value,
+  }));
+  const addSubject = useAction(addSubjectAction, {
     onSuccess(args) {
-      setData((d) => {
-        const nd = { ...d };
-        nd.assessments = nd.assessments.filter((a) => a.id != args.input.id);
+      setData((current) => {
+        const d = { ...current };
+        console.log(args.data);
+
+        d.classroom.subjects.push(args.data);
       });
-      return nd as any;
     },
+    // onExecute(args) {},
   });
-  const saveForm = useAction(saveJobAssessmentAction, {
+  async function _addSubject(code, title) {
+    const ex = data.classroom.subjects.find(
+      (s) => s.classRoomSubject.subjectCode == code,
+    );
+    if (ex) {
+      console.log(ex);
+      toast.error("Already added");
+      return;
+    }
+    addSubject.execute({
+      code,
+      title,
+      classRoomId: data.classroom.id,
+      classGroupCode: data.classroom.classGroupCode,
+    });
+  }
+  const saveSubjectAssessment = useAction(saveSubjectAssessmentAction, {
     onSuccess(args) {
       setData((currnet) => {
         const newData = { ...currnet };
-        newData.assessments.unshift(args.data as any);
+        const index = newData.classroom.subjects.findIndex(
+          (s) => s.id == args.input.subjectsOnClassRoomsId,
+        );
+        newData.classroom.subjects[index].assessments.push(args.data);
+        // newData.assessments.unshift(args.data as any);
         return newData;
-      });
-      form.reset({
-        opened: false,
       });
       toast.success("Saved");
     },
@@ -93,98 +117,95 @@ export function ManageClassroomSubjectFormSheet() {
     <Sheet open={ctx.isOpened} onOpenChange={ctx.close}>
       <SheetContent className="flex w-full flex-col p-2 pb-8 sm:w-2/3 sm:p-4 lg:w-2/3">
         <SheetHeader>
-          <SheetTitle>{data.classRoom.classTitle}</SheetTitle>
+          <SheetTitle>{data.classroom.classTitle}</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-auto">
-          <Table dir="rtl">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Score</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.assessments?.map((a) => (
-                <TableRow key={a.id}>
-                  <TableCell>
-                    {`${a.id}. `}
-                    {a.title}
-                  </TableCell>
-                  <TableCell>{a.obtainable}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      onClick={(s) => {
-                        deleteAssessment.execute({
-                          id: a.id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-            {/* <TableFooter></TableFooter> */}
-          </Table>
-          <Button
-            onClick={(e) => {
-              form.reset({
-                opened: true,
-                id: null,
-                obtainable: "",
-                title: "",
-                subjectsOnClassRoomsId: +ctx.params.subjectId,
-              });
-            }}
-            className=""
-          >
-            <Icons.add className="size-4" />
-          </Button>
-        </div>
-
-        {formOpened && (
-          <SheetFooter className="flex flex-col">
-            <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(saveForm.execute)}>
-                <div className="flex flex-col gap-4">
-                  <FormInput
-                    dir="rtl"
-                    control={form.control}
-                    label="Assessment Title"
-                    name="title"
-                  />
-                  <FormInput
-                    dir="rtl"
-                    control={form.control}
-                    label="Obtainable"
-                    name="obtainable"
-                  />
-                  <div className="flex flex-wrap gap-4">
-                    {data?.assessmentSuggestions?.map((a) => (
-                      <Badge
-                        onClick={() => {
-                          form.setValue("obtainable", String(a.obtainable));
-                          form.setValue("title", a.title);
-                        }}
-                        key={a.title}
-                      >
-                        {a.title}
-                      </Badge>
+          {data.classroom.subjects.map((subject) => (
+            <Collapsible className="border-b">
+              <CollapsibleTrigger className="flex w-full" dir="rtl">
+                <div className="">{subject.classRoomSubject.subject.title}</div>
+                <div className="flex-1"></div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                {/* {subject.assessments?.} */}
+                <Table dir="rtl">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Subject</TableHead>
+                      <TableHead>Obtainable</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {subject.assessments.map((aa) => (
+                      <TableRow key={aa.id}>
+                        <TableCell>{aa.title}</TableCell>
+                        <TableCell>{aa.obtainable}</TableCell>
+                      </TableRow>
                     ))}
-                  </div>
-                </div>
-                <div className="flex">
-                  <div className="flex-1"></div>
-                  <Button type="submit" className="">
-                    Save
-                  </Button>
-                </div>
-              </form>
-            </FormProvider>
-          </SheetFooter>
-        )}
+                  </TableBody>
+                </Table>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild className="">
+                    <Button className="">
+                      <Icons.add className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <ScrollArea className="h-[40vh]">
+                      {data.assessments?.map((s) => (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const exists = subject.assessments.find(
+                              (_s) => _s.title?.localeCompare(s.title) == 0,
+                            );
+                            if (exists) {
+                              toast.error("Already exists");
+                              return;
+                            }
+                            saveSubjectAssessment.execute({
+                              obtainable: String(s.obtainable),
+                              subjectsOnClassRoomsId: subject.id,
+                              title: s.title,
+                            });
+                            // _addSubject(s., s.label);
+                          }}
+                          dir="rtl"
+                          key={s.id}
+                        >
+                          {s.title} {`(${s.obtainable})`}
+                        </DropdownMenuItem>
+                      ))}
+                    </ScrollArea>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
+          <div className="flex-1 justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="">
+                <Button className="">
+                  <Icons.add className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <ScrollArea className="h-[40vh]">
+                  {subjects?.map((s) => (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        _addSubject(s.value, s.label);
+                      }}
+                      dir="rtl"
+                      key={s.value}
+                    >
+                      {s.label}
+                    </DropdownMenuItem>
+                  ))}
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </SheetContent>
     </Sheet>
   );

@@ -84,18 +84,6 @@ export default function ResultClassList({
         </DropdownMenu>
       </div>
       <CollapsibleContent className="w-screen overflow-auto sm:px-8">
-        {/* <Select defaultValue={subjectCode} onValueChange={setSubjectCode}>
-          <SelectTrigger className="w-[280px]">
-            <SelectValue placeholder="" />
-          </SelectTrigger>
-          <SelectContent>
-            {data.subjects?.map((s) => (
-              <SelectItem key={s.id} value={s.classRoomSubject.subjectCode}>
-                {s.classRoomSubject?.subject?.title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select> */}
         <div className="w-screen overflow-hidden">
           <div className="relative w-full overflow-x-scroll">
             <Table dir="rtl" className="">

@@ -11,7 +11,6 @@ export function CheckFilter({ label, ctx, value, qk }) {
           let clis = (query?.[qk] || "")?.split(",");
           if (e) clis?.push(value);
           else clis = clis?.filter((a) => a !== value);
-          console.log(clis);
           const vals = clis?.filter(Boolean);
           const classes = vals.join(",");
           if (!vals.length)
@@ -23,9 +22,9 @@ export function CheckFilter({ label, ctx, value, qk }) {
               [qk]: classes,
             });
         }}
-        checked={query?.[qk]?.split(",").some((s) => s === value)}
+        checked={!!query?.[qk]?.split(",").some((s) => s === value)}
       />
-      <Label>{label}</Label>
+      <Label className="capitalize">{label}</Label>
     </div>
   );
 }

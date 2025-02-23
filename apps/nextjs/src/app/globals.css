@@ -97,3 +97,7 @@ table.student-table tr {
 table.student-table td {
   @apply h-[35px] p-2 py-1;
 }
+table.compact td,
+table.compact th {
+  @apply p-0 py-0.5;
+}

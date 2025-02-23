@@ -25,3 +25,9 @@ export const saveJobAssessmentSchema = z.object({
   obtainable: z.string(),
   title: z.string(),
 });
+export const addSubjecSchema = z.object({
+  title: z.string(),
+  code: z.string(),
+  classGroupCode: z.string(),
+  classRoomId: z.number(),
+});

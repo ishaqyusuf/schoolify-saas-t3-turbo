@@ -1,13 +1,11 @@
 "use client";
 
+import type { SubjectAssessmentForm } from "actions/get-subject-assessment-form";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
-import {
-  getSubjectAssessmentFormAction,
-  SubjectAssessmentForm,
-} from "actions/get-subject-assessment-form";
-import { saveJobAssessmentAction } from "actions/save-subject-assessment";
+import { getSubjectAssessmentFormAction } from "actions/get-subject-assessment-form";
+import { saveSubjectAssessmentAction } from "actions/save-subject-assessment";
 import { saveJobAssessmentSchema } from "actions/schema";
 import { useAction } from "next-safe-action/hooks";
 
@@ -74,7 +72,7 @@ export function SubjectAssessmentFormSheet({}) {
       return nd as any;
     },
   });
-  const saveForm = useAction(saveJobAssessmentAction, {
+  const saveForm = useAction(saveSubjectAssessmentAction, {
     onSuccess(args) {
       setData((currnet) => {
         const newData = { ...currnet };

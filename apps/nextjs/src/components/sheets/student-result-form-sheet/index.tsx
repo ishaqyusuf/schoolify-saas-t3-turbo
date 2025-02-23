@@ -91,7 +91,7 @@ export function StudentAssessmentResultForm() {
         ) : (
           <div className="flex-1 overflow-auto">
             {classRoomdata?.groupedAssessments?.map((gr, i) => (
-              <Table key={i} dir="rtl">
+              <Table className="compact" key={i} dir="rtl">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Subject</TableHead>
@@ -126,7 +126,6 @@ export function StudentAssessmentResultForm() {
                     </TableRow>
                   ))}
                 </TableBody>
-                {/* <TableFooter></TableFooter> */}
               </Table>
             ))}
           </div>
