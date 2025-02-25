@@ -29,7 +29,7 @@ export default function ResultPrintHeader({
         </div>
         <div className="space-y-2 text-sm font-semibold" dir="rtl">
           <div className="flex gap-2">
-            <div className="flex w-2/3">
+            <div className="flex w-2/3 items-end">
               <div className="whitespace-nowrap">اسم التلميذ/التلميذة</div>
               <span>:</span>
               <div className="inline-flex w-full border-b-2 border-dashed border-muted-foreground px-4 text-xl">
@@ -39,21 +39,21 @@ export default function ResultPrintHeader({
                 ))}
               </div>
             </div>
-            <div className="">
+            <div className="flex items-end">
               <span>العام الدراسي</span>
               <span>:</span>
               <span className="mx-2">١٤٤٥/١٤٤٦هـ</span>
             </div>
           </div>
-          <div className="flex-wraps flex gap-2 whitespace-nowrap text-sm">
-            <div className="">
+          <div className="flex-wraps flex items-end gap-2 whitespace-nowrap text-sm">
+            <div className="flex items-end">
               <span>الفصل</span>
               <span>:</span>
               <span className="mx-2 border-b border-muted-foreground">
                 {fasl}
               </span>
             </div>
-            <div className="">
+            <div className="flex items-end">
               <span>الفترة</span>
               <span>:</span>
               <span className="mx-2 border-b border-muted-foreground">

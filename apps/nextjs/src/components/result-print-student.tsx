@@ -1,16 +1,14 @@
+import type { ResultEntries } from "actions/load-result-entries";
 import Image from "next/image";
-import { ResultEntries } from "actions/load-result-entries";
 import { cva } from "class-variance-authority";
 
 import { cn } from "@acme/ui";
 
+import type { composeClassResult } from "~/lib/third-term/compose-student-result";
 import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { configs } from "~/app/exam-result/data";
 import { useResultPrintQuery } from "~/hooks/use-result-print-query";
-import {
-  composeClassResult,
-  composeStudentResult,
-} from "~/lib/third-term/compose-student-result";
+import { composeStudentResult } from "~/lib/third-term/compose-student-result";
 import ResultPrintHeader from "./result-print-header";
 
 export interface ResultPrintStudentProps {
@@ -87,7 +85,15 @@ export function ResultPrintStudent({
         />
         <div className="flex flex-col">
           {student.result.resultTable?.map((rt, i) => (
-            <table className={cn("result", ctx?.paperSize)} dir="rtl" key={i}>
+            <table
+              className={cn(
+                "result",
+                i == 0 && "border-t border-muted-foreground",
+                ctx?.paperSize,
+              )}
+              dir="rtl"
+              key={i}
+            >
               <thead>
                 <tr>
                   <th>{i != 0 || <div className="text-right">المواد</div>}</th>

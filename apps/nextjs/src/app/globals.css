@@ -104,7 +104,7 @@ table.compact th {
 
 table.result td,
 table.result th {
-  @apply border border-muted-foreground p-1 px-2;
+  @apply border-x border-b border-muted-foreground p-1 px-2;
 }
 table.result th {
   @apply h-auto font-bold text-black;
@@ -112,6 +112,17 @@ table.result th {
 table.half-packed td {
   @apply text-sm;
 }
-table.half-packed th {
+table.half-packed th,
+table.half th,
+table.half-packed td,
+table.half td {
   @apply text-sm;
+}
+table.half-packed td,
+table.half-packed th {
+  @apply p-0 px-2;
+}
+table.half td,
+table.half th {
+  @apply p-0.5 px-2;
 }

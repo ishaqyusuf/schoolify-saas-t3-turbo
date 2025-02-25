@@ -45,7 +45,7 @@ export default function ResultPrintClassList({
   const [opened, openChanged] = useState(false);
   const manageClassroom = useManageClassroomSubjectQuery();
   if (
-    printQuery.classCodes &&
+    printQuery.classCodes?.trim() &&
     !printQuery.classCodes?.split(",").includes(data.classCode)
   )
     return null;
@@ -64,7 +64,7 @@ export default function ResultPrintClassList({
       <CollapsibleContent className="overflow-auto sm:px-8">
         <div className="">
           {composedData.pagedStudent.map((g, i) => (
-            <div key={i} className="print:break-before-page">
+            <div key={i} className="print:break-after-page">
               {g.students.map((student, ii) => (
                 <ResultPrintStudent
                   student={student.data}
