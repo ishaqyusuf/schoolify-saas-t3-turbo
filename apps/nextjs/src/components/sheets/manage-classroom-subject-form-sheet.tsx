@@ -73,9 +73,11 @@ export function ManageClassroomSubjectFormSheet() {
       setData((current) => {
         const d = { ...current };
         console.log(args.data);
-
         d.classroom.subjects.push(args.data);
       });
+    },
+    onError(args) {
+      toast.error(args.error?.serverError);
     },
     // onExecute(args) {},
   });

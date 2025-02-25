@@ -1,23 +1,12 @@
 import Image from "next/image";
 import { ResultEntries } from "actions/load-result-entries";
+import { cva } from "class-variance-authority";
 
 import { cn } from "@acme/ui";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@acme/ui/collapsible";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@acme/ui/table";
 
 import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { configs } from "~/app/exam-result/data";
+import { useResultPrintQuery } from "~/hooks/use-result-print-query";
 import {
   composeClassResult,
   composeStudentResult,
@@ -28,12 +17,53 @@ export interface ResultPrintStudentProps {
   data: ResultEntries[number];
   student: ReturnType<typeof composeClassResult>["students"][number];
   className;
+  resultIndex;
 }
+const pagePrintStyle = cva("", {
+  variants: {
+    paperSize: {
+      half: "h-[5.85in] space-y-2 pt-8",
+      "half-packed": "pt-8s h-[5.85in] space-y-2",
+      full: "h-[11.6in] space-y-8 pt-10",
+    },
+    paperPos: {
+      top: "",
+      bottom: "",
+    },
+    firsPage: {
+      true: "",
+      false: "",
+    },
+  },
+  compoundVariants: [
+    {
+      paperSize: "half-packed",
+      paperPos: "top",
+      className: "h-[5.8in]",
+    },
+    {
+      paperSize: "half-packed",
+      paperPos: "bottom",
+      firsPage: false,
+      // className: "print:break-after-pages",
+    },
+    {
+      paperSize: "half-packed",
+      paperPos: "bottom",
+      className: "h-[5.90in] pt-4",
+    },
+  ],
+  defaultVariants: {
+    paperSize: "full",
+  },
+});
 export function ResultPrintStudent({
   data,
   className,
   student,
+  resultIndex,
 }: ResultPrintStudentProps) {
+  const ctx = useResultPrintQuery();
   return (
     <div
       className={cn(className)}
@@ -41,7 +71,13 @@ export function ResultPrintStudent({
     >
       <div
         className={cn(
-          "flex h-[5.85in] flex-col space-y-2 overflow-hidden p-0 pt-8",
+          "flex flex-col overflow-hidden p-0",
+          pagePrintStyle({
+            ...(ctx as any),
+            paperPos: resultIndex % 2 == 1 ? "bottom" : "top",
+            firsPage:
+              resultIndex == 0 || (ctx.paperSize != "full" && resultIndex < 2),
+          }),
         )}
       >
         <ResultPrintHeader
@@ -49,37 +85,41 @@ export function ResultPrintStudent({
           data={data}
           student={student}
         />
-        {student.result.resultTable?.map((rt, i) => (
-          <table className="result overflow-hidden" dir="rtl" key={i}>
-            <thead>
-              <tr>
-                <th>
-                  <div className="text-right">المواد</div>
-                </th>
-                {rt[0].assessments.map((a) => (
-                  <th align="center" key={a.id}>
-                    <div className="text-center">{a.title}</div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rt.map((rt, i) => (
-                <tr key={rt.id}>
-                  <td>
-                    {`${enToAr(i + 1)}.  `}
-                    {rt.classRoomSubject.subject.title}
-                  </td>
-                  {rt.assessments.map((aa) => (
-                    <td align="center" key={aa.id}>
-                      {aa.score ? enToAr(aa.score) : "-"}
-                    </td>
+        <div className="flex flex-col">
+          {student.result.resultTable?.map((rt, i) => (
+            <table className={cn("result", ctx?.paperSize)} dir="rtl" key={i}>
+              <thead>
+                <tr>
+                  <th>{i != 0 || <div className="text-right">المواد</div>}</th>
+                  {rt[0].assessments.map((a) => (
+                    <th align="center" className="w-32" key={a.id}>
+                      <div className="text-center">
+                        {a.title}
+
+                        <span>{`  (${!a.obtainable ? "-" : enToAr(a.obtainable)})`}</span>
+                      </div>
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        ))}
+              </thead>
+              <tbody>
+                {rt.map((rt, i) => (
+                  <tr key={rt.id}>
+                    <td>
+                      {`${enToAr(rt.index)}.  `}
+                      {rt.classRoomSubject.subject.title}
+                    </td>
+                    {rt.assessments.map((aa) => (
+                      <td align="center" key={aa.id}>
+                        {aa.score ? enToAr(aa.score) : "-"}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ))}
+        </div>
         {/* <div className="flex-1"></div> */}
         <div className="">
           <div className="space-y">
@@ -112,6 +152,7 @@ export function ResultPrintStudent({
                   {ci == 0 && (
                     <div className="-top-8s absolutes right-2">
                       <Image
+                        alt=""
                         width={80}
                         height={80}
                         src={`/signature.png`}

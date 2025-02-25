@@ -29,7 +29,6 @@ import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { arabic } from "~/fonts";
 import { useManageClassroomSubjectQuery } from "~/hooks/use-manage-classroom-subject-query";
 import { useResultPrintQuery } from "~/hooks/use-result-print-query";
-import { useStudentResultFormQuery } from "~/hooks/use-student-result-form-query";
 import { composeClassResult } from "~/lib/third-term/compose-student-result";
 import { ResultPrintStudent } from "./result-print-student";
 
@@ -41,7 +40,7 @@ export default function ResultPrintClassList({
   const [subjectCode, setSubjectCode] = useState(null);
   const printQuery = useResultPrintQuery();
 
-  const composedData = composeClassResult(data);
+  const composedData = composeClassResult(data, printQuery.paperSize == "full");
 
   const [opened, openChanged] = useState(false);
   const manageClassroom = useManageClassroomSubjectQuery();
@@ -53,9 +52,9 @@ export default function ResultPrintClassList({
   return (
     <Collapsible
       dir="rtl"
-      open={opened}
+      open
       onOpenChange={openChanged}
-      className={cn(arabic.className, "border-b")}
+      className={cn(arabic.className, "")}
     >
       <div className="flex w-full gap-2 print:hidden">
         <CollapsibleTrigger className="flex w-full p-2">
@@ -63,19 +62,42 @@ export default function ResultPrintClassList({
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent className="overflow-auto sm:px-8">
-        {composedData.students.map((student, index) => (
-          <ResultPrintStudent
-            student={student}
-            data={data}
-            key={student.id}
-            className={cn(
-              index > 1 && index % 2 == 1 && "print:break-after-pages",
+        <div className="">
+          {composedData.pagedStudent.map((g, i) => (
+            <div key={i} className="print:break-before-page">
+              {g.students.map((student, ii) => (
+                <ResultPrintStudent
+                  student={student.data}
+                  data={data}
+                  key={student.data.id}
+                  resultIndex={student.studentIndex}
+                  className={cn(
+                    ii == 1 &&
+                      "border-t-2 border-dashed border-muted-foreground",
+                  )}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="hidden">
+          {composedData.students.map((student, index) => (
+            <ResultPrintStudent
+              student={student}
+              data={data}
+              key={student.id}
+              resultIndex={index}
+              className={cn(
+                index > 1 && index % 2 == 1 && "print:break-after-pages",
 
-              index % 2 == 1 &&
-                "border-t-2 border-dashed border-muted-foreground",
-            )}
-          />
-        ))}
+                index % 2 == 1 &&
+                  printQuery.paperSize != "full" &&
+                  "border-t-2 border-dashed border-muted-foreground",
+                "border-b print:border-b-0",
+              )}
+            />
+          ))}
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );

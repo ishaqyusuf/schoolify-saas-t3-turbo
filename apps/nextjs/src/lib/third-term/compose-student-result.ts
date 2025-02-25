@@ -1,5 +1,8 @@
 import { ResultEntries } from "actions/load-result-entries";
 
+import { randomNumber2 } from "@acme/utils";
+
+import { configs } from "~/app/exam-result/data";
 import { getResultComment } from "./get-result-comment";
 
 export function composeStudentResult({
@@ -16,27 +19,38 @@ export function composeStudentResult({
     attended: 0,
     position: 0,
   };
+  let index = 0;
   let resultTable = data.assessmentGroup.map((grp) => {
     return grp.subjects.map((subject) => {
+      let totalScore = 0;
       let assessments = subject.assessments.map((a) => {
         const result = student.assessmentResults.find(
           (ar) => ar.classSubjectAssessmentId == a.id,
         );
         let obtainedEn = result?.obtained;
+        if (!obtainedEn && a.obtainable)
+          obtainedEn = +(randomNumber2(0, a.obtainable) as any);
         if (a.obtainable) {
           totalScores.subjects++;
           if (obtainedEn) totalScores.attended++;
           totalScores.obtainable += a.obtainable;
           totalScores.obtained += obtainedEn || 0;
+          totalScore += obtainedEn || 0;
         }
         return {
           ...a,
           score: obtainedEn,
         };
       });
+      assessments.push({
+        obtainable: 100,
+        score: totalScore,
+        title: configs.total,
+      } as any);
       // .filter((r) => r.obtainable);
       return {
         ...subject,
+        index: (index += 1),
         assessments,
       };
     });
@@ -54,7 +68,7 @@ export function composeStudentResult({
     comment: getResultComment(percentageScore),
   };
 }
-export function composeClassResult(data: ResultEntries[number]) {
+export function composeClassResult(data: ResultEntries[number], fullPage) {
   let students = data.students.map((student) => {
     return {
       ...student,
@@ -85,11 +99,35 @@ export function composeClassResult(data: ResultEntries[number]) {
       return student;
     });
 
-  return {
+  const resp = {
     ...data,
     students: students.filter((s) => s.result.percentageAttendance > 59),
-    //   .sort(
-    //     (a, b) => a.result.totalScores.position - b.result.totalScores.position,
-    //   ),
+    pagedStudent: [] as {
+      students: {
+        data: (typeof students)[number];
+        studentIndex: number;
+      }[];
+    }[],
   };
+  resp.students.forEach((student, index) => {
+    if (fullPage) {
+      resp.pagedStudent.push({
+        students: [{ data: student, studentIndex: index }],
+      });
+    } else {
+      const topPage = index % 2 === 0;
+      const pageIndex = Math.floor(index / 2);
+
+      if (!resp.pagedStudent[pageIndex]) {
+        resp.pagedStudent[pageIndex] = { students: [] };
+      }
+
+      resp.pagedStudent[pageIndex].students.push({
+        data: student,
+        studentIndex: index,
+      });
+    }
+  });
+
+  return resp;
 }

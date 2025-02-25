@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@acme/ui/dropdown-menu";
+import { ScrollArea } from "@acme/ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@acme/ui/sheet";
 import {
   Table,
@@ -89,7 +90,7 @@ export function StudentAssessmentResultForm() {
         {isPending ? (
           <></>
         ) : (
-          <div className="flex-1 overflow-auto">
+          <ScrollArea className="sm:pb-auto flex-1 overflow-auto pb-[20vh]">
             {classRoomdata?.groupedAssessments?.map((gr, i) => (
               <Table className="compact" key={i} dir="rtl">
                 <TableHeader>
@@ -128,7 +129,7 @@ export function StudentAssessmentResultForm() {
                 </TableBody>
               </Table>
             ))}
-          </div>
+          </ScrollArea>
         )}
       </SheetContent>
     </Sheet>

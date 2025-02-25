@@ -15,11 +15,14 @@ export const _addSubjectAction = async (
       title: data.title,
     },
     update: {},
+
     create: {
       title: data.title,
       code: data.code,
     },
   });
+  console.log({ data, subject });
+
   const classSubject = await prisma.exampleClassSubjects.upsert({
     where: {
       classGroupCode_subjectCode: {
@@ -29,11 +32,26 @@ export const _addSubjectAction = async (
     },
     create: {
       classGroupCode: data.classGroupCode,
-      subjectCode: subject.code,
-      classRooms: {
+      // subjectCode: subject.code,
+      subject: {
         connect: {
-          id: data.classRoomId,
+          id: subject.id,
         },
+      },
+      classRooms: {
+        create: {
+          classRoomId: data.classRoomId,
+        },
+        // connectOrCreate: {
+        //   where: {
+        //     classRoomSubjectId_classRoomId: {
+        //       classRoomSubjectId: classSubject.id,
+        //     },
+        //   },
+        // },
+        // connect: {
+        //   id: data.classRoomId,
+        // },
       },
     },
     update: {
@@ -44,6 +62,10 @@ export const _addSubjectAction = async (
       },
     },
   });
+  console.log(data);
+  console.log(">>>>>");
+  console.log(classSubject);
+
   const subjectOnClassRoom = await prisma.exampleSubjectsOnClassRooms.upsert({
     where: {
       classRoomSubjectId_classRoomId: {

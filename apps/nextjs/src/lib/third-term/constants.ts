@@ -17,6 +17,8 @@ export const subjectsByCode = {
   KHT: "الخط",
   MAHF: "المحفوظة",
   NAHW: "النحو",
+  TABEER: "التعبير",
+  TAFSEER: "التفسير",
 };
 export const classGroups: { [code in string]: ClassCodes[] } = {
   tamheedi: ["tamheediA", "tamheediB", "tamheediC", "tamheediD"],
@@ -40,8 +42,29 @@ export const classSubjectsByCode: { [code in ClassCodes]: SubjectCodes[] } = {
     "ADHKR",
     "AQ",
   ],
-  idaadi: ["SEEROH", "AR", "HADTH", "FIQH", "ADHKR", "MUTOON", "NAHW", "TAJW"],
-  idaadi2: ["QUR", "HADTH", "FIQH", "MAHF", "ADHKR"],
+  idaadi: [
+    "QUR",
+    "SEEROH",
+    "AR",
+    "HADTH",
+    "FIQH",
+    "ADHKR",
+    "MUTOON",
+    "NAHW",
+    "TAJW",
+  ],
+  idaadi2: [
+    "QUR",
+    "HADTH",
+    "FIQH",
+    "MAHF",
+    "ADHKR",
+    "NAHW",
+    "TAJW",
+    "AQ",
+    "TABEER",
+    "TAFSEER",
+  ],
 };
 
 export const subjectCodes = Object.keys(subjectsByCode);

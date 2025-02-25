@@ -109,3 +109,9 @@ table.result th {
 table.result th {
   @apply h-auto font-bold text-black;
 }
+table.half-packed td {
+  @apply text-sm;
+}
+table.half-packed th {
+  @apply text-sm;
+}
