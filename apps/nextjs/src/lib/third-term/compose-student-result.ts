@@ -1,4 +1,4 @@
-import { ResultEntries } from "actions/load-result-entries";
+import type { ResultEntries } from "actions/load-result-entries";
 
 import { randomNumber2 } from "@acme/utils";
 
@@ -12,7 +12,7 @@ export function composeStudentResult({
   data: ResultEntries[number];
   student: ResultEntries[number]["students"][number];
 }) {
-  let totalScores = {
+  const totalScores = {
     obtainable: 0,
     obtained: 0,
     subjects: 0,
@@ -20,16 +20,16 @@ export function composeStudentResult({
     position: 0,
   };
   let index = 0;
-  let resultTable = data.assessmentGroup.map((grp) => {
+  const resultTable = data.assessmentGroup.map((grp) => {
     return grp.subjects.map((subject) => {
       let totalScore = 0;
-      let assessments = subject.assessments.map((a) => {
+      const assessments = subject.assessments.map((a) => {
         const result = student.assessmentResults.find(
           (ar) => ar.classSubjectAssessmentId == a.id,
         );
-        let obtainedEn = result?.obtained;
-        if (!obtainedEn && a.obtainable)
-          obtainedEn = +(randomNumber2(0, a.obtainable) as any);
+        const obtainedEn = result?.obtained;
+        // if (!obtainedEn && a.obtainable)
+        // obtainedEn = +(randomNumber2(0, a.obtainable) as any);
         if (a.obtainable) {
           totalScores.subjects++;
           if (obtainedEn) totalScores.attended++;
