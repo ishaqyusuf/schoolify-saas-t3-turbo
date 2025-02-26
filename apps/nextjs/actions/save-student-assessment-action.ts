@@ -8,6 +8,8 @@ import { saveStudentAssessmentSchema } from "./schema";
 export const saveSubjectAssessmentAction = actionClient
   .schema(saveStudentAssessmentSchema)
   .action(async ({ parsedInput: data }) => {
+    console.log({ obtained: data.obtained });
+
     return prisma.$transaction((async (tx: typeof prisma) => {
       const studentSubjectAssessment =
         await tx.exampleStudentSubjectAssessment.upsert({

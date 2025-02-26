@@ -189,7 +189,6 @@ function ResultCell({ student, assessment }: ResultCellProps) {
   const result = student?.assessmentResults?.find(
     (a) => assessment.id == a.classSubjectAssessmentId,
   );
-  if (result) console.log({ result });
   return (
     <TableCell className="p-1">
       {result?.obtained ? enToAr(result?.obtained) : "-"}

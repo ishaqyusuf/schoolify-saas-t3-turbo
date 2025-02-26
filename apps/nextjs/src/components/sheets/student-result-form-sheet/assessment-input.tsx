@@ -29,7 +29,7 @@ export function AssessmentInput({ studentData, subjectAssessment }: Props) {
   useEffect(() => {
     if (debounceValue) {
       saveResult.execute({
-        obtained: value,
+        obtained: value || 0,
         studentId: studentData?.id,
         assessmentId: subjectAssessment.id,
         subjectOnClassRoomId: subjectAssessment.subjectsOnClassRoomsId,

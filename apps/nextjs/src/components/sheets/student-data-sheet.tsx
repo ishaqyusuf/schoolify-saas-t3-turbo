@@ -6,7 +6,6 @@ import { parseAsBoolean, useQueryStates } from "nuqs";
 import { cn, FormProvider, useForm } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import { Icons } from "@acme/ui/common/icons";
-import FormSelect from "@acme/ui/controlled-inputs/form-select";
 import { Label } from "@acme/ui/label";
 import {
   Sheet,
@@ -19,11 +18,6 @@ import { Textarea } from "@acme/ui/textarea";
 import { toast } from "@acme/ui/toast";
 
 import { arabic } from "~/fonts";
-import {
-  classArray,
-  classCodes,
-  subjectsArray,
-} from "~/lib/third-term/constants";
 import { Data, dataStore } from "~/lib/third-term/store";
 
 export const useStudentForm = () => {

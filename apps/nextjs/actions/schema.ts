@@ -25,7 +25,7 @@ export const saveStudentAssessmentSchema = z.object({
   subjectOnClassRoomId: z.number(),
   assessmentId: z.number(),
   studentId: z.number(),
-  obtained: z.number(),
+  obtained: z.number().nullable(),
 });
 export const saveJobAssessmentSchema = z.object({
   //   id: z.number().nullable(),
