@@ -66,7 +66,6 @@ export function AssessmentInput({ studentData, subjectAssessment }: Props) {
         type="number"
         max={100}
         min={0}
-        disabled
         className="[&::-webkit-outer-spin-button]:appearance-non h-8 w-full appearance-none rounded-md border-none bg-white px-1 outline-none [&::-webkit-inner-spin-button]:appearance-none"
         value={value}
         onFocus={() => setFocus(true)}
