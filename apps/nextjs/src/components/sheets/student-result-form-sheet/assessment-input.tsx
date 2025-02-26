@@ -53,24 +53,28 @@ export function AssessmentInput({ studentData, subjectAssessment }: Props) {
 
   return (
     <motion.div
-      className="relative w-24 rounded-lg p-0.5"
-      // animate={{ borderColor }}
+      className="relative w-20 rounded-lg"
       transition={{ duration: 0.3 }}
-      // style={{ borderWidth: 2 }}
+      animate={{
+        borderColor,
+        borderStyle: saveResult.isExecuting ? "dashed" : "solid",
+        borderWidth: 2,
+      }}
+      style={{ borderWidth: 2 }}
     >
       <motion.input
         type="number"
         max={100}
         min={0}
-        className="[&::-webkit-outer-spin-button]:appearance-non h-8 w-20 appearance-none rounded-md bg-white px-2 outline-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="[&::-webkit-outer-spin-button]:appearance-non h-8 w-full appearance-none rounded-md border-none bg-white px-1 outline-none [&::-webkit-inner-spin-button]:appearance-none"
         value={value}
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
         onInput={() => setTyping(generateRandomString(2))}
         onChange={(e) => setValue(e.target.value === "" ? "" : +e.target.value)}
-        animate={{ borderColor }}
-        transition={{ duration: 0.3 }}
-        style={{ borderWidth: 2 }}
+        // animate={{ borderColor }}
+        // transition={{ duration: 0.3 }}
+        // style={{ borderWidth: 2 }}
       />
     </motion.div>
   );
