@@ -102,18 +102,3 @@ export default function ResultPrintClassList({
     </Collapsible>
   );
 }
-interface ResultCellProps {
-  student: ResultEntries[number]["students"][number];
-  assessment: ResultEntries[number]["subjects"][number]["assessments"][number];
-}
-function ResultCell({ student, assessment }: ResultCellProps) {
-  const result = student?.assessmentResults?.find(
-    (a) => assessment.id == a.classSubjectAssessmentId,
-  );
-  if (result) console.log({ result });
-  return (
-    <TableCell className="p-1">
-      {result?.obtained ? enToAr(result?.obtained) : "-"}
-    </TableCell>
-  );
-}

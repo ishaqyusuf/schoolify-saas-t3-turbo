@@ -8,7 +8,6 @@ import type { composeClassResult } from "~/lib/third-term/compose-student-result
 import { enToAr } from "~/app/[domain]/exam-result-2/helper";
 import { configs } from "~/app/exam-result/data";
 import { useResultPrintQuery } from "~/hooks/use-result-print-query";
-import { composeStudentResult } from "~/lib/third-term/compose-student-result";
 import ResultPrintHeader from "./result-print-header";
 
 export interface ResultPrintStudentProps {
@@ -37,7 +36,7 @@ const pagePrintStyle = cva("", {
     {
       paperSize: "half-packed",
       paperPos: "top",
-      className: "h-[5.8in]",
+      className: "h-[5.8in] pt-8",
     },
     {
       paperSize: "half-packed",
@@ -70,6 +69,7 @@ export function ResultPrintStudent({
       <div
         className={cn(
           "flex flex-col overflow-hidden p-0",
+
           pagePrintStyle({
             ...(ctx as any),
             paperPos: resultIndex % 2 == 1 ? "bottom" : "top",
@@ -154,7 +154,7 @@ export function ResultPrintStudent({
           {[configs.directorSignature, configs.teacherSignature].map(
             (c, ci) => (
               <div className="relative">
-                <div className="h-[40px]">
+                <div className="h-[30px]">
                   {ci == 0 && (
                     <div className="-top-8s absolutes right-2">
                       <Image

@@ -30,7 +30,9 @@ export default function ResultPrintHeader({
         <div className="space-y-2 text-sm font-semibold" dir="rtl">
           <div className="flex gap-2">
             <div className="flex w-2/3 items-end">
-              <div className="whitespace-nowrap">اسم التلميذ/التلميذة</div>
+              <div className="whitespace-nowrap text-black/70">
+                اسم التلميذ/التلميذة
+              </div>
               <span>:</span>
               <div className="inline-flex w-full border-b-2 border-dashed border-muted-foreground px-4 text-xl">
                 {/* {student.fullName} */}
@@ -40,54 +42,54 @@ export default function ResultPrintHeader({
               </div>
             </div>
             <div className="flex items-end">
-              <span>العام الدراسي</span>
+              <span className="text-black/70">العام الدراسي</span>
               <span>:</span>
-              <span className="mx-2">١٤٤٥/١٤٤٦هـ</span>
+              <span className="mx-1">١٤٤٥/١٤٤٦هـ</span>
             </div>
           </div>
           <div className="flex-wraps flex items-end gap-2 whitespace-nowrap text-sm">
             <div className="flex items-end">
-              <span>الفصل</span>
+              <span className="text-black/70">الفصل</span>
               <span>:</span>
-              <span className="mx-2 border-b border-muted-foreground">
+              <span className="mx-1 border-b border-muted-foreground">
                 {fasl}
               </span>
             </div>
             <div className="flex items-end">
-              <span>الفترة</span>
+              <span className="text-black/70">الفترة</span>
               <span>:</span>
-              <span className="mx-2 border-b border-muted-foreground">
+              <span className="mx-1 border-b border-muted-foreground">
                 {term}
               </span>
             </div>
             <div className="">
-              <span>عدد الطلاب في الفصل</span>
+              <span className="text-black/70">المجموع الكلي </span>
               <span>:</span>
-              <span className="mx-2 border-b border-muted-foreground">
-                {enToAr(data.students.length)}
-              </span>
-            </div>
-            <div className="">
-              <span>المجموع الكلي </span>
-              <span>:</span>
-              <span className="mx-2 border-b border-muted-foreground">
+              <span className="mx-1 border-b border-muted-foreground">
                 {`${enToAr(student.result.totalScores.obtained)}/${enToAr(
                   student.result.totalScores.obtainable,
                 )}`}
               </span>
             </div>
             <div className="">
-              <span>الدرجة</span>
+              <span className="text-black/70">عدد الطلاب في الفصل</span>
               <span>:</span>
-              <span className="mx-2 border-b border-muted-foreground">
+              <span className="mx-1 border-b border-muted-foreground">
+                {enToAr(data.students.length)}
+              </span>
+            </div>
+            <div className="">
+              <span className="text-black/70">الدرجة</span>
+              <span>:</span>
+              <span className="mx-1 border-b border-muted-foreground">
                 {`${enToAr(student.result.totalScores.position)}`}
               </span>
             </div>
             <div className="">
-              <span>تاريخ العودة للعام الجديد</span>
+              <span className="text-black/70">تاريخ العودة للعام الجديد</span>
               <span>:</span>
-              <span className="mx-2 border-b border-muted-foreground">
-                {enToAr("05/04/2025")}
+              <span className="mx-1 border-b border-muted-foreground">
+                {enToAr("05/04/25")}
               </span>
             </div>
           </div>
