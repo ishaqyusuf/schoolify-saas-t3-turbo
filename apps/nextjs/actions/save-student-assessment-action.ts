@@ -8,7 +8,7 @@ import { saveStudentAssessmentSchema } from "./schema";
 export const saveSubjectAssessmentAction = actionClient
   .schema(saveStudentAssessmentSchema)
   .action(async ({ parsedInput: data }) => {
-    console.log({ obtained: data.obtained });
+    data.obtained = data.obtained || null;
 
     return prisma.$transaction((async (tx: typeof prisma) => {
       const studentSubjectAssessment =
