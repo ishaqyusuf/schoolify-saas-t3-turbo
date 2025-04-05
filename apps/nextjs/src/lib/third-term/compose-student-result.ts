@@ -1,4 +1,4 @@
-import type { ResultEntries } from "actions/load-result-entries";
+import type { ResultEntries } from "actions/example/load-result-entries";
 
 import { randomNumber2 } from "@acme/utils";
 

@@ -4,7 +4,7 @@ import type { z } from "zod";
 
 import { prisma } from "@acme/db";
 
-import { actionClient } from "./safe-action";
+import { actionClient } from "../safe-action";
 import { addSubjecSchema } from "./schema";
 
 export const _addSubjectAction = async (

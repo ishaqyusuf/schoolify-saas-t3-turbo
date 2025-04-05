@@ -1,15 +1,15 @@
 "use client";
 
-import type { ClassRoomSubjectManager } from "actions/get-classroom-subject-manager";
-import type { SubjectAssessmentForm } from "actions/get-subject-assessment-form";
+import type { ClassRoomSubjectManager } from "actions/example/get-classroom-subject-manager";
+import type { SubjectAssessmentForm } from "actions/example/get-subject-assessment-form";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addSubjectAction } from "actions/add-subject-action";
-import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
-import { getClassroomSubjectManager } from "actions/get-classroom-subject-manager";
-import { getSubjectAssessmentFormAction } from "actions/get-subject-assessment-form";
+import { addSubjectAction } from "actions/example/add-subject-action";
+import { deleteSubjectAssessmentAction } from "actions/example/delete-subject-assessment-action";
+import { getClassroomSubjectManager } from "actions/example/get-classroom-subject-manager";
+import { getSubjectAssessmentFormAction } from "actions/example/get-subject-assessment-form";
+import { saveJobAssessmentSchema } from "actions/example/schema";
 import { saveSubjectAssessmentAction } from "actions/save-subject-assessment";
-import { saveJobAssessmentSchema } from "actions/schema";
 import { useAction } from "next-safe-action/hooks";
 
 import { FormProvider, useForm } from "@acme/ui";

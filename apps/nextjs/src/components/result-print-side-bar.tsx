@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   getResultPrintQueryData,
   ResultPrintQueryData,
-} from "actions/get-result-print-query-data";
+} from "actions/example/get-result-print-query-data";
 
 import { Label } from "@acme/ui/label";
 import {

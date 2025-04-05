@@ -1,5 +1,5 @@
-import { _addStudentAction } from "actions/add-student-action";
-import { loadResultEntriesAction } from "actions/load-result-entries";
+import { _addStudentAction } from "actions/example/add-student-action";
+import { loadResultEntriesAction } from "actions/example/load-result-entries";
 
 import { prisma } from "@acme/db";
 
@@ -34,20 +34,20 @@ export default async function Page({ searchParams }) {
   //   firstName: "سميّة",
   //   fathersName: "محمد",
   // });
-  // await Promise.all(
-  //   [
-  //     ["محمد", "يوسف"],
-  //     ["إبراهيم", "إسحاق"],
-  //     ["عبد الرحمان", "مصطفى"],
-  //   ].map(async ([firstName, fathersName]) => {
-  //     await _addStudentAction({
-  //       classCode: "tamheediD" as ClassCodes,
-  //       classRoomId: 77,
-  //       firstName,
-  //       fathersName,
-  //     });
-  //   }),
-  // );
+  await Promise.all(
+    [
+      ["محمد", "يوسف"],
+      ["إبراهيم", "إسحاق"],
+      ["عبد الرحمان", "مصطفى"],
+    ].map(async ([firstName, fathersName]) => {
+      await _addStudentAction({
+        classCode: "tamheediD" as ClassCodes,
+        classRoomId: 77,
+        firstName,
+        fathersName,
+      });
+    }),
+  );
   return (
     <>
       {result?.map((result, index) => (

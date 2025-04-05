@@ -1,5 +1,5 @@
-import type { ClassRoomAssessmentForm } from "actions/get-classroom-assessment-form";
-import type { GetStudentAssessmentForm } from "actions/get-student-assement-form";
+import type { ClassRoomAssessmentForm } from "actions/example/get-classroom-assessment-form";
+import type { GetStudentAssessmentForm } from "actions/example/get-student-assement-form";
 import { useMemo } from "react";
 
 import { Button } from "@acme/ui/button";

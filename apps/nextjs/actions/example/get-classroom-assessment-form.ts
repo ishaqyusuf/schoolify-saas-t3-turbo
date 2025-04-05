@@ -4,7 +4,7 @@ import { prisma } from "@acme/db";
 
 import type { AsyncFnType } from "~/lib/types";
 import { groupClassAssessment } from "~/lib/third-term/group-class-assessment";
-import { actionClient } from "./safe-action";
+import { actionClient } from "../safe-action";
 import { getClassRoomAssessmentFormSchema } from "./schema";
 
 export type ClassRoomAssessmentForm = AsyncFnType<

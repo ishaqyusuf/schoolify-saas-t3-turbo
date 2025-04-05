@@ -1,0 +1,10 @@
+model SaasAccount {
+    id        String          @id @default(uuid())
+    name      String
+    email     String
+    phoneNo   String
+    createdAt DateTime?       @default(now()) @db.Timestamp(0)
+    updatedAt DateTime?       @updatedAt
+    deletedAt DateTime?       @db.Timestamp(0)
+    schools   SchoolProfile[]
+}

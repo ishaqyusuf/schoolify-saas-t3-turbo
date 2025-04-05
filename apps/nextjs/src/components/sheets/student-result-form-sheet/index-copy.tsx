@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { getClassRoomAssessmentFormAction } from "actions/get-classroom-assessment-form";
+import { getClassRoomAssessmentFormAction } from "actions/example/get-classroom-assessment-form";
 import {
   _getStudentAssessmentFormAction,
   getStudentAssessmentFormAction,
-} from "actions/get-student-assement-form";
+} from "actions/example/get-student-assement-form";
 import { useAction } from "next-safe-action/hooks";
 
 import {

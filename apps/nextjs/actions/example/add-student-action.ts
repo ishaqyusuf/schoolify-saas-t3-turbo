@@ -6,7 +6,7 @@ import { prisma } from "@acme/db";
 import { generateRandomString } from "@acme/utils";
 
 import type { addStudentSchema } from "./schema";
-import { actionClient } from "./safe-action";
+import { actionClient } from "../safe-action";
 import { addSubjecSchema } from "./schema";
 
 export const _addStudentAction = async ({

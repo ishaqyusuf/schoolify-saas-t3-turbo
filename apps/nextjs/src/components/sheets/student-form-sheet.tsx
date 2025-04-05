@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addStudentAction } from "actions/add-student-action";
-import { addStudentSchema } from "actions/schema";
+import { addStudentAction } from "actions/example/add-student-action";
+import { addStudentSchema } from "actions/example/schema";
 import { useAction } from "next-safe-action/hooks";
 
 import { FormProvider } from "@acme/ui";

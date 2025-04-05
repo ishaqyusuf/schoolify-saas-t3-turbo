@@ -1,4 +1,4 @@
-import { loadDataAction } from "actions/load-data";
+import { loadDataAction } from "actions/example/load-data";
 import { FieldPath, FieldPathValue } from "react-hook-form";
 import { create } from "zustand";
 

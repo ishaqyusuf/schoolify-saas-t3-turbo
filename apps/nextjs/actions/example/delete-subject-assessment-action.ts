@@ -2,7 +2,7 @@
 
 import { prisma, Prisma } from "@acme/db";
 
-import { actionClient } from "./safe-action";
+import { actionClient } from "../safe-action";
 import {
   deleteSubjectAssessmentSchema,
   saveJobAssessmentSchema,

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ResultEntries } from "actions/load-result-entries";
+import type { ResultEntries } from "actions/example/load-result-entries";
 import { Fragment, useEffect, useState } from "react";
 
 import { cn } from "@acme/ui";

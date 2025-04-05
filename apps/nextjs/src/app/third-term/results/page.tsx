@@ -3,7 +3,7 @@
 import {
   dumpStudentData,
   truncateData,
-} from "actions/dumb-student-data-action";
+} from "actions/example/dumb-student-data-action";
 
 import { Button } from "@acme/ui/button";
 import {

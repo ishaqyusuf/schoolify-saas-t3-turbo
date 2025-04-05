@@ -1,12 +1,12 @@
 "use client";
 
-import type { SubjectAssessmentForm } from "actions/get-subject-assessment-form";
+import type { SubjectAssessmentForm } from "actions/example/get-subject-assessment-form";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { deleteSubjectAssessmentAction } from "actions/delete-subject-assessment-action";
-import { getSubjectAssessmentFormAction } from "actions/get-subject-assessment-form";
+import { deleteSubjectAssessmentAction } from "actions/example/delete-subject-assessment-action";
+import { getSubjectAssessmentFormAction } from "actions/example/get-subject-assessment-form";
+import { saveJobAssessmentSchema } from "actions/example/schema";
 import { saveSubjectAssessmentAction } from "actions/save-subject-assessment";
-import { saveJobAssessmentSchema } from "actions/schema";
 import { useAction } from "next-safe-action/hooks";
 
 import { FormProvider, useForm } from "@acme/ui";

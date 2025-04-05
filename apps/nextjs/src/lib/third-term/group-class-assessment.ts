@@ -1,4 +1,4 @@
-import { ResultEntries } from "actions/load-result-entries";
+import { ResultEntries } from "actions/example/load-result-entries";
 
 export function groupClassAssessment<T>(subjects: T[]) {
   const groupedAssessments: {

@@ -1,4 +1,4 @@
-import { loadResultEntriesAction } from "actions/load-result-entries";
+import { loadResultEntriesAction } from "actions/example/load-result-entries";
 
 import { prisma } from "@acme/db";
 
